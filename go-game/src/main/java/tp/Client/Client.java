@@ -33,7 +33,7 @@ public class Client {
             while (game.isRunning()) {
                 Move move = game.doMove();
 
-                serverConnection.sendMessage(move);
+                serverConnection.sendMessage(new Message(move.getMove()));
 
                 Message message = serverConnection.getResponse();
 

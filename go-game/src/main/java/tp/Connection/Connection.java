@@ -1,17 +1,29 @@
 package tp.Connection;
 
+import tp.Message.Message;
+
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public abstract class Connection {
-    private final Socket serverSocket;
-    private final PrintWriter output;
-    private final BufferedReader input;
+    protected final Socket socket;
+    protected final PrintWriter output;
+    protected final BufferedReader input;
 
-    public Connection(Socket serverSocket, PrintWriter output, BufferedReader input) {
-        this.serverSocket = serverSocket;
-        this.output = output;
-        this.input = input;
+    public Connection(String localhost, int port) throws IOException {
+        this.socket = new Socket(localhost, port);
+        this.output = new PrintWriter(socket.getOutputStream());
+        this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
+    public Connection(Socket socket) throws IOException {
+        this.socket = socket;
+        this.output = new PrintWriter(socket.getOutputStream());
+        this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    }
+
+    public abstract Message getResponse() throws IOException;
+    public abstract void sendMessage(Message message) throws IOException;
 }

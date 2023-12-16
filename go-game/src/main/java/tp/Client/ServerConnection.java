@@ -1,5 +1,6 @@
 package tp.Client;
 
+import tp.Connection.Connection;
 import tp.Game.Move;
 import tp.Message.Message;
 import java.io.BufferedReader;
@@ -8,19 +9,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ServerConnection {
-    private final Socket serverSocket;
-    private final PrintWriter output;
-    private final BufferedReader input;
+public class ServerConnection extends Connection {
     public ServerConnection(String localhost, int port) throws IOException {
 
-        this.serverSocket = new Socket(localhost, port);
-        this.output = new PrintWriter(serverSocket.getOutputStream());
-        this.input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
+        super(localhost, port);
     }
 
-    public void sendMessage(Move move) {
-        output.println(move.getMove());
+    public void sendMessage(Message message) {
+        output.println(message.getMessage());
         output.flush(); // flush the stream to ensure that the data has been written to the stream
 
     }

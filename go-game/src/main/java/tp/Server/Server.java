@@ -12,7 +12,6 @@ public class Server {
      * Start the server
      */
     private boolean running = true;
-    private boolean gameRunning = true;
 
     /**
      * Start the server at port 8000
@@ -22,6 +21,7 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(8000)) {
             while (running) {
                 Socket clientSocket = serverSocket.accept();
+
                 new Thread(new ClientHandler(clientSocket)).start();
             }
         } catch (IOException e) {
