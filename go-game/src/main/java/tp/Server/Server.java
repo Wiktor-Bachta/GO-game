@@ -5,7 +5,6 @@ import java.net.*;
 
 /**
  * Class Server is a simple server that can accept a single client connection
- *
  */
 public class Server {
 
@@ -13,11 +12,13 @@ public class Server {
      * Start the server
      */
     private boolean running = true;
+    private boolean gameRunning = true;
 
     /**
      * Start the server at port 8000
      */
     public void run() {
+        System.out.println("Server started");
         try (ServerSocket serverSocket = new ServerSocket(8000)) {
             while (running) {
                 Socket clientSocket = serverSocket.accept();
@@ -32,32 +33,34 @@ public class Server {
     /**
      * Client handler
      */
-    private void handleClient(Socket clientSocket)
-    {
+    private void handleClient(Socket clientSocket) {
         System.out.println("Client connected");
-        try(PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true)) {
+        try (PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true)) {
             BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            boolean gameRunning = true;
+            gameRunning = true;
 
             while (gameRunning) {
                 String clientMessage = input.readLine();
+
+                if(clientMessage == null) {
+                    stopGame();
+                    continue;
+                }
+
                 System.out.println("Client message: " + clientMessage);
                 // instead of if else we can use a factory method to read if message is a move, info, endgame or error
-                if(clientMessage.contains("endgame")) {
-                    gameRunning = false;
+                if (clientMessage.contains("endgame")) {
                     output.println("endgame");
-                }
-                else if(clientMessage.contains("info")) {
+                    stopGame();
+                    continue;
+                } else if (clientMessage.contains("info")) {
                     output.println("Info: " + clientMessage);
-                }
-                else if(clientMessage.contains("move")) {
+                } else if (clientMessage.contains("move")) {
                     output.println("Move: " + clientMessage);
-                }
-                else if(clientMessage.contains("error")) {
+                } else if (clientMessage.contains("error")) {
                     output.println("Error: " + clientMessage);
-                }
-                else {
+                } else {
                     output.println("Message: " + clientMessage);
                 }
             }
@@ -65,6 +68,7 @@ public class Server {
         } catch (IOException e) {
             System.out.println("Error handling client: " + e.getMessage());
             e.printStackTrace();
+
         }
     }
 
@@ -73,5 +77,11 @@ public class Server {
      */
     public void stop() {
         running = false;
+        System.out.println("Server stop");
+    }
+
+    private void stopGame() {
+        System.out.println("Client disconnected");
+        gameRunning = false;
     }
 }
