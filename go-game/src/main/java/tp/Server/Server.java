@@ -20,19 +20,50 @@ public class Server {
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(8000)) {
             while (running) {
-                try (Socket socket = serverSocket.accept();
-                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                     PrintWriter output = new PrintWriter(socket.getOutputStream(), true)) {
-
-                    String clientInput = input.readLine();
-                    System.out.println("Received from client: " + clientInput);
-
-                    String serverResponse = "Message received";
-                    output.println(serverResponse);
-                }
+                Socket clientSocket = serverSocket.accept();
+                new Thread(() -> handleClient(clientSocket)).start();
             }
         } catch (IOException e) {
             System.out.println("Server exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Client handler
+     */
+    private void handleClient(Socket clientSocket)
+    {
+        System.out.println("Client connected");
+        try(PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true)) {
+            BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+            boolean gameRunning = true;
+
+            while (gameRunning) {
+                String clientMessage = input.readLine();
+                System.out.println("Client message: " + clientMessage);
+                // instead of if else we can use a factory method to read if message is a move, info, endgame or error
+                if(clientMessage.contains("endgame")) {
+                    gameRunning = false;
+                    output.println("endgame");
+                }
+                else if(clientMessage.contains("info")) {
+                    output.println("Info: " + clientMessage);
+                }
+                else if(clientMessage.contains("move")) {
+                    output.println("Move: " + clientMessage);
+                }
+                else if(clientMessage.contains("error")) {
+                    output.println("Error: " + clientMessage);
+                }
+                else {
+                    output.println("Message: " + clientMessage);
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error handling client: " + e.getMessage());
             e.printStackTrace();
         }
     }
