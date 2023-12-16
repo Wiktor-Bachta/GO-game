@@ -1,4 +1,4 @@
-package tp.Client;
+package tp.Connection;
 
 import tp.Connection.Connection;
 import tp.Game.Move;

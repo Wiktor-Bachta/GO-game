@@ -7,11 +7,11 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private boolean gameRunning;
-    private ClientConnection clientConnection;
+    private tp.Server.ClientConnection clientConnection;
 
     public ClientHandler(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
-        this.clientConnection = new ClientConnection(clientSocket);
+        this.clientConnection = new tp.Server.ClientConnection(clientSocket);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package tp.Client;
 
+import tp.Connection.ServerConnection;
 import tp.Game.Game;
 import tp.Game.Move;
 import tp.Game.PawnColor;
