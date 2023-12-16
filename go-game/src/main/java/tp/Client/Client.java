@@ -1,63 +1,43 @@
 package tp.Client;
 
+import tp.Game.Game;
 import tp.Game.Move;
 import tp.Game.PawnColor;
+import tp.Message.Message;
 
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
+
+
 public class Client {
 
-    /**
-     * Here will be board display
-     */
-    // private Board board;
     private static int nextId = 1;     // id generator
     private int id;        // unique id
-    private boolean running;     // game running flag
-    private PawnColor pawnColor; // player color
+    private Game game;
+    private ServerConnection serverConnection;
 
-    public Client() {
-        // board = new Board();
+    public Client() throws IOException {
         this.id = nextId++;
+        this.game = new Game();
+        this.serverConnection = new ServerConnection("localhost", 8000);
     }
 
-    public void run() throws IOException {
+    public void run(){
         System.out.println("Client started");
-        try (Socket clientSocket = new Socket("localhost", 8000)) {
-            PrintWriter output = new PrintWriter(clientSocket.getOutputStream());
-            BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        try {
 
-            launchGame();
+            game.launch();
 
-            while (running) {
-                Move move = doMove();
-                // send move to server
+            while (game.isRunning()) {
+                Move move = game.doMove();
 
-                output.println(move.getMove());
-                output.flush(); // flush the stream to ensure that the data has been written to the stream
+                serverConnection.sendMessage(move);
 
-                // receive move from server
-                // here can be  a factory method to read if message is a move, info, endgame or error but for now lets suppose its a move
+                Message message = serverConnection.getResponse();
 
-                String serverMessage = input.readLine();
-                if (serverMessage == null) {
-                    throw new IOException("Server disconnected");
-                }
-                // instead of if else we can use a factory method to read if message is a move, info, endgame or error
-                if (serverMessage.contains("endgame")) {
-                    running = false;
-                    System.out.println("Game ended");
-                } else if (serverMessage.contains("error")) {
-                    System.out.println("Error: " + serverMessage);
-                } else if (serverMessage.contains("info")) {
-                    System.out.println("Info: " + serverMessage);
-                } else if (serverMessage.contains("move")) {
-                    System.out.println("Move: " + serverMessage);
-                } else {
-                    System.out.println("Message: " + serverMessage);
-                }
+                game.handleResponse(message.getMessage());
             }
         } catch (IOException e) {
             System.out.println("Client exception: " + e.getMessage());
@@ -69,29 +49,9 @@ public class Client {
         System.out.println("Client stop");
     }
 
-    private void launchGame() {
-        // display the board
-        // choose game with user or bot
-        this.running = true;
-        System.out.println("Launch Game");
-    }
 
-    private Move doMove() {
-        // send move to server
-        // get move from user
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter move: ");
-        String moveString = scanner.nextLine();
 
-        return new Move(moveString);
-    }
 
-    private Move getMove(String moveString) {
-        // receive move from server
-        // here can be  a factory method to read if message is a move, info or error
-        System.out.println("Get move: " + moveString);
-        return new Move(moveString);
-    }
 
 
 }
