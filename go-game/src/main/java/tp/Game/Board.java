@@ -9,16 +9,15 @@ public class Board {
     Square[][] squares;
     int size;
 
-    public Board(int size) {
+    public Board(int size, int pixelSize) {
         this.size = size;
         squares = new Square[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 squares[i][j] = new Square(i, j);
-                squares[i][j].setFill();
             }
         }
-        boardGUI = new BoardGUI(size,squares);
+        boardGUI = new BoardGUI(size, pixelSize, squares);
     }
 
     public Square[][] getSquares() {

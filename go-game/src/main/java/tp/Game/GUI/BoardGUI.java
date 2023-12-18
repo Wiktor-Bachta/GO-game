@@ -16,20 +16,18 @@ public class BoardGUI {
     int pixelSize;
     int squareSize;
 
-    public BoardGUI(int size, Square[][] squares) {
-        pixelSize = 760;
+    public BoardGUI(int size, int pixelSize, Square[][] squares) {
+        this.pixelSize = pixelSize;
         this.size = size;
         squareSize = pixelSize / size;
         pane = new Pane();
         squaresGUI = new SquareGUI[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
+                squares[i][j].setSquareGUI(new SquareGUI(i, j, squareSize));
                 squaresGUI[i][j] = squares[i][j].getSquareGUI();
                 pane.getChildren().add(squaresGUI[i][j]);
-                squaresGUI[i][j].setWidth(squareSize);
-                squaresGUI[i][j].setHeight(squareSize);
-                squaresGUI[i][j].setX(squareSize * i);
-                squaresGUI[i][j].setY(squareSize * j);
+                pane.getChildren().add(squaresGUI[i][j].getCircle());
             }
         }
         verticalLines = new Line[size];

@@ -8,23 +8,41 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class SquareGUI extends Rectangle {
-    Pane pane;
+    Circle circle;
 
-    public SquareGUI(int x, int y) {
-        setOnMouseClicked(new MyMouseHandler());
+    public SquareGUI(int x, int y, int size) {
+        setFill(Color.SANDYBROWN);
+        setWidth(size);
+        setHeight(size);
+        setX(size * x);
+        setY(size * y);
+        setCircle(x * size + size / 2, y * size + size / 2);
+        setOnMouseClicked(event -> {
+            circle.setVisible(true);
+            circle.setFill(Color.BLACK);
+        });
+        setOnMouseEntered(event -> {
+            setFill(Color.DARKGRAY);
+        });
+
+        setOnMouseExited(event -> {
+            setFill(Color.SANDYBROWN);
+        });
     }
 
     public void placePawn(Color color) {
         setFill(color);
     }
 
-    class MyMouseHandler implements EventHandler<MouseEvent> {
+    public void setCircle(int x, int y) {
+        circle = new Circle(10);
+        circle.setFill(Color.TRANSPARENT);
+        circle.setVisible(false);
+        circle.setCenterX(x);
+        circle.setCenterY(y);
+    }
 
-        @Override
-        public void handle(MouseEvent e) {
-            SquareGUI square = (SquareGUI) e.getSource();
-            square.setFill(Color.RED);
-        }
-
+    public Circle getCircle() {
+        return circle;
     }
 }

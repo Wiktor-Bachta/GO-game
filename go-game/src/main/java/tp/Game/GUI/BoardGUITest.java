@@ -12,8 +12,10 @@ public class BoardGUITest extends Application {
 
     @Override 
     public void start(Stage primaryStage) {
-        Board board = new Board(19);
-        Scene scene = new Scene(board.getBoardGUI().getPane(), 760, 760);
+        int size = 19;
+        int pixelSize = size * 40;
+        Board board = new Board(size, pixelSize);
+        Scene scene = new Scene(board.getBoardGUI().getPane(), pixelSize, pixelSize);
         primaryStage.setResizable(false);
         primaryStage.setTitle("BoardGUITest");
         primaryStage.setScene(scene);

@@ -10,7 +10,6 @@ public class Square {
     public Square(int x, int y) {
         this.x = x;
         this.y = y;
-        squareGUI = new SquareGUI(x, y);
     }
 
     public int getX() {
@@ -22,10 +21,14 @@ public class Square {
     }
 
     public void setFill() {
-        squareGUI.setFill(Color.GREEN);
+        squareGUI.setFill(Color.BEIGE);
     }
 
     public SquareGUI getSquareGUI() {
         return squareGUI;
+    }
+
+    public void setSquareGUI(SquareGUI squareGUI) {
+        this.squareGUI = squareGUI;
     }
 }
