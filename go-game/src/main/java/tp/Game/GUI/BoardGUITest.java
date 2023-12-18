@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import tp.Game.Board;
 
+//mvn exec:java -Dexec.mainClass="tp.Game.GUI.BoardGUITest"
 public class BoardGUITest extends Application {
 
     @Override 
