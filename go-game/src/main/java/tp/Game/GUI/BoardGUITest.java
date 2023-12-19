@@ -1,7 +1,5 @@
 package tp.Game.GUI;
 
-import org.junit.Test;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
