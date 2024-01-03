@@ -28,7 +28,13 @@ public class Client {
         System.out.println("Client started");
         try {
 
-            game.launch();
+            Message launchMessage= game.launch();
+            serverConnection.sendMessage(launchMessage);
+
+            Message launchReceivedMessage = serverConnection.getResponse();
+            System.out.println(launchReceivedMessage.getMessage());
+
+            //game.handleResponse(launchReceivedMessage.getMessage());
 
             while (game.isRunning()) {
                 Move move = game.doMove();
