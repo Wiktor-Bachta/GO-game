@@ -1,6 +1,5 @@
-package tp.Server;
+package tp.Connection;
 
-import tp.Connection.Connection;
 import tp.Message.Message;
 import java.io.IOException;
 import java.net.Socket;

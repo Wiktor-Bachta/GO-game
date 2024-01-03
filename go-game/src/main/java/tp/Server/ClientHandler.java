@@ -3,15 +3,24 @@ package tp.Server;
 import tp.Message.Message;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
+
+import tp.Connection.ClientConnection;
+import tp.Message.MessageHandler;
+
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private boolean gameRunning;
-    private tp.Server.ClientConnection clientConnection;
+    private ClientConnection clientConnection;
 
-    public ClientHandler(Socket clientSocket) throws IOException {
+
+    private MessageHandler messageHandler;
+
+    public ClientHandler(Socket clientSocket, List<Session> sessions) throws IOException {
         this.clientSocket = clientSocket;
-        this.clientConnection = new tp.Server.ClientConnection(clientSocket);
+        this.clientConnection = new ClientConnection(clientSocket);
+        this.messageHandler = new MessageHandler(sessions, this);
     }
 
     @Override
@@ -23,6 +32,13 @@ public class ClientHandler implements Runnable {
 
             while (gameRunning) {
                 Message message = clientConnection.getResponse();
+
+                messageHandler.handleMessage(message);
+
+                if(message.getMessage().equals("Launch;Disconnect")) {
+                    stopGame();
+                    break;
+                }
                 System.out.println("Received message: " + message.getMessage());
 
                 clientConnection.sendMessage(message);
