@@ -61,12 +61,13 @@ public class Game {
             case 2:
                 System.out.println("Play with user");
                 System.out.println("a. Create game");
-
-                msg = createGame(msg,"user");
-
                 System.out.println("b. Join game");
 
-                msg = joinGame(msg);
+                String gameChoice = scanner.next();
+                if(gameChoice.equals("a"))
+                    msg = createGame(msg,"user");
+                else if(gameChoice.equals("b"))
+                    msg = joinGame(msg);
 
                 break;
             case 3:
@@ -80,7 +81,6 @@ public class Game {
                 msg = "Disconnect";
                 break;
         }
-
         return new Message(msg);
     }
 
@@ -96,7 +96,7 @@ public class Game {
         // type game id
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter game id: ");
-        int gameId = scanner.nextInt();
+        String gameId = scanner.nextLine();
         return msg+"Join;"+gameId+";";
     }
 

@@ -72,12 +72,11 @@ public class MessageHandler {
                 break;
             case "Join":
                 System.out.println("Join");
-                Scanner scanner = new Scanner(System.in);
-                System.out.println("Enter session ID: ");
-                String sessionIDToJoin = scanner.nextLine();
+                String sessionIDToJoin = opponent;
 
+                boolean sessionExists = false;
                 for(Session s : sessions) {
-                    if(s.getID().equals(sessionIDToJoin)) {
+                    if(s.getID().equals(sessionIDToJoin)) {        // name collision bc opponent is gameID for join msg and opponent type for create msg
                         if(s.isAbleToJoin()) {
                             s.addPlayer2(clientHandler);
                             response = "Launch;"+"Start;";
@@ -85,7 +84,12 @@ public class MessageHandler {
                             System.out.println("Session is full");
                             response = "Launch;"+"Error;Session is full;";
                         }
+                        sessionExists = true;
                     }
+                }
+                if(!sessionExists) {
+                    System.out.println("Session does not exist");
+                    response = "Launch;"+"Error;Session does not exist;";
                 }
                 break;
             default:

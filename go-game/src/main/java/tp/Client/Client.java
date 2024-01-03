@@ -32,8 +32,9 @@ public class Client {
             serverConnection.sendMessage(launchMessage);
 
             Message launchReceivedMessage = serverConnection.getResponse();
+            System.out.println(launchReceivedMessage.getMessage());
 
-            game.handleResponse(launchReceivedMessage.getMessage());
+            //game.handleResponse(launchReceivedMessage.getMessage());
 
             while (game.isRunning()) {
                 Move move = game.doMove();

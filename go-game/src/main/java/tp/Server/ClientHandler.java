@@ -14,7 +14,6 @@ public class ClientHandler implements Runnable {
     private boolean gameRunning;
     private ClientConnection clientConnection;
 
-
     private MessageHandler messageHandler;
 
     public ClientHandler(Socket clientSocket, List<Session> sessions) throws IOException {
@@ -33,7 +32,7 @@ public class ClientHandler implements Runnable {
             while (gameRunning) {
                 Message message = clientConnection.getResponse();
 
-                messageHandler.handleMessage(message);
+                message = messageHandler.handleMessage(message);
 
                 if(message.getMessage().equals("Launch;Disconnect")) {
                     stopGame();
