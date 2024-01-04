@@ -6,20 +6,19 @@ import java.net.Socket;
 import java.util.List;
 
 import tp.Connection.ClientConnection;
-import tp.Message.MessageHandler;
+import tp.Message.ServerMessageHandler;
 
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private boolean gameRunning;
     private ClientConnection clientConnection;
-
-    private MessageHandler messageHandler;
+    private ServerMessageHandler messageHandler;
 
     public ClientHandler(Socket clientSocket, List<Session> sessions) throws IOException {
         this.clientSocket = clientSocket;
         this.clientConnection = new ClientConnection(clientSocket);
-        this.messageHandler = new MessageHandler(sessions, this);
+        this.messageHandler = new ServerMessageHandler(sessions, this);
     }
 
     @Override
@@ -53,5 +52,9 @@ public class ClientHandler implements Runnable {
     private void stopGame() {
         System.out.println("Client disconnected");
         gameRunning = false;
+    }
+
+    public ClientConnection getClientConnection() {
+        return clientConnection;
     }
 }

@@ -36,6 +36,14 @@ public class Session {
         ableToJoin = false;
     }
 
+    public ClientHandler getPlayer1() {
+        return player1;
+    }
+
+    public ClientHandler getPlayer2() {
+        return player2;
+    }
+
     public boolean isAbleToJoin() {
         return ableToJoin;
     }

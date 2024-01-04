@@ -3,19 +3,23 @@ package tp.Message;
 import tp.Server.ClientHandler;
 import tp.Server.Session;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 
-public class MessageHandler {
+public class ServerMessageHandler {
 
     List<Session> sessions;
     ClientHandler clientHandler;
-    public MessageHandler(List<Session> sessions, ClientHandler clientHandler) {
+    public ServerMessageHandler(List<Session> sessions, ClientHandler clientHandler) {
         this.sessions = sessions;
         this.clientHandler = clientHandler;
     }
 
-    public Message handleMessage(Message message) {
+    /**
+     * Server automatically handles the message and returns a response, it doesnt wait for anything
+     *
+     */
+    public Message handleMessage(Message message) throws IOException {
         String msg = message.getMessage();
         String[] msgArray = msg.split(";");
         String msgType = msgArray[0];
@@ -49,7 +53,7 @@ public class MessageHandler {
         return new Message(response);
     }
 
-    private String handleLaunch(String gameType, String opponent) {
+    private String handleLaunch(String gameType, String opponent) throws IOException {
         String response="";
 
         switch (gameType) {
@@ -80,6 +84,7 @@ public class MessageHandler {
                         if(s.isAbleToJoin()) {
                             s.addPlayer2(clientHandler);
                             response = "Launch;"+"Start;";
+                            s.getPlayer2().getClientConnection().sendMessage(new Message(response));
                         } else {
                             System.out.println("Session is full");
                             response = "Launch;"+"Error;Session is full;";

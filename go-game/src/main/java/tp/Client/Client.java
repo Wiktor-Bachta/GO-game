@@ -3,6 +3,7 @@ package tp.Client;
 import tp.Connection.ServerConnection;
 import tp.Game.Game;
 import tp.Game.Move;
+import tp.Message.ClientMessageHandler;
 import tp.Message.Message;
 
 import java.io.*;
@@ -17,11 +18,13 @@ public class Client {
     private int id;        // unique id
     private Game game;
     private ServerConnection serverConnection;
+    private ClientMessageHandler clientMessageHandler;
 
     public Client() throws IOException {
         this.id = nextId++;
         this.game = new Game();
         this.serverConnection = new ServerConnection("localhost", 8000);
+        this.clientMessageHandler = new ClientMessageHandler();
     }
 
     public void run(){
@@ -32,9 +35,8 @@ public class Client {
             serverConnection.sendMessage(launchMessage);
 
             Message launchReceivedMessage = serverConnection.getResponse();
-            System.out.println(launchReceivedMessage.getMessage());
+            clientMessageHandler.handleMessage(launchReceivedMessage);
 
-            //game.handleResponse(launchReceivedMessage.getMessage());
 
             while (game.isRunning()) {
                 Move move = game.doMove();
