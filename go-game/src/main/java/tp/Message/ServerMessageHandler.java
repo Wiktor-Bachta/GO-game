@@ -33,6 +33,7 @@ public class ServerMessageHandler {
                 break;
             case "Move":
                 System.out.println("Move");
+                response = handleMove(msgArray);
                 break;
             case "Pass":
                 System.out.println("Pass");
@@ -66,7 +67,19 @@ public class ServerMessageHandler {
                     session.addPlayer2();
                     sessions.add(session);
 
-                    response = "Launch;"+"Start;";
+                    // randomize who goes first
+                    int random = (int)(Math.random() * 2);
+                    if(random == 0) {
+                        response = "Launch;"+"Start;"+sessionID+";"+"Wait";
+                        session.getPlayer1().getClientConnection().sendMessage(new Message(response));
+                        response = "Launch;"+"Start;"+sessionID+";"+"Move";
+                    }
+                    else {
+                        response = "Launch;"+"Start;"+sessionID+";"+"Move";
+                        session.getPlayer2().getClientConnection().sendMessage(new Message(response));
+                        response = "Launch;"+"Start;"+sessionID+";"+"Wait";
+                    }
+
                 } else {
                     System.out.println("Play with user");
                     //TODO: display ID to share with user
@@ -83,8 +96,21 @@ public class ServerMessageHandler {
                     if(s.getID().equals(sessionIDToJoin)) {        // name collision bc opponent is gameID for join msg and opponent type for create msg
                         if(s.isAbleToJoin()) {
                             s.addPlayer2(clientHandler);
-                            response = "Launch;"+"Start;";
-                            s.getPlayer2().getClientConnection().sendMessage(new Message(response));
+
+                            // randomize who goes first
+                            int random = (int)(Math.random() * 2);
+                            if(random == 0) {
+                                response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Wait";
+                                s.getPlayer1().getClientConnection().sendMessage(new Message(response));
+                                response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Move";
+                            }
+                            else {
+                                response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Move";
+                                s.getPlayer2().getClientConnection().sendMessage(new Message(response));
+                                response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Wait";
+                            }
+
+                            System.out.println("Session joined");
                         } else {
                             System.out.println("Session is full");
                             response = "Launch;"+"Error;Session is full;";
@@ -105,6 +131,22 @@ public class ServerMessageHandler {
         return response;
     }
 
+    private String handleMove(String msgArray[]) throws IOException {
+        String x = msgArray[1];
+        String y = msgArray[2];
+        String sessionID = msgArray[3];
 
+        for(Session s : sessions) {
+            if(s.getID().equals(sessionID)) {
+                if(s.getPlayer1().equals(clientHandler)) {
+                    s.getPlayer2().getClientConnection().sendMessage(new Message("Move;"+x+";"+y+";"));
+                } else {
+                    s.getPlayer1().getClientConnection().sendMessage(new Message("Move;"+x+";"+y+";"));
+                }
+            }
+        }
+
+        return "Wait";
+    }
 
 }
