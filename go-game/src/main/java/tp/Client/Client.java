@@ -42,7 +42,6 @@ public class Client {
                         System.out.println("DOING MOVE");
                         Message clientMessage = game.doMove();
                         serverConnection.sendMessage(clientMessage);
-
                         break;
                     case WAITING_FOR_MOVE:
                         System.out.println("WAITING FOR MOVE");

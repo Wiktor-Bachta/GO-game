@@ -33,14 +33,13 @@ public class ServerMessageHandler {
                 System.out.println("Disconnect");
                 break;
             case "Move":
-                System.out.println("Move");
                 response = handleMove(msgArray);
                 break;
             case "Pass":
-                System.out.println("Pass");
+                response = handlePass(msgArray[1]);
                 break;
             case "Surrender":
-                System.out.println("Surrender");
+                response = handleSurrender(msgArray[1]);
                 break;
             case "Chat":
                 System.out.println("Chat");
@@ -155,4 +154,29 @@ public class ServerMessageHandler {
         return "Wait";
     }
 
+    private String handlePass(String sessionID) throws IOException {
+        for(Session s : sessions) {
+            if(s.getID().equals(sessionID)) {
+                if(s.getPlayer1().equals(clientHandler)) {
+                    s.getPlayer2().getClientConnection().sendMessage(new Message("Pass"));
+                } else {
+                    s.getPlayer1().getClientConnection().sendMessage(new Message("Pass"));
+                }
+            }
+        }
+        return "Wait";
+    }
+
+    private String handleSurrender(String sessionID) throws IOException {
+        for(Session s : sessions) {
+            if(s.getID().equals(sessionID)) {
+                if(s.getPlayer1().equals(clientHandler)) {
+                    s.getPlayer2().getClientConnection().sendMessage(new Message("Surrender;W"));   // W - win
+                } else {
+                    s.getPlayer1().getClientConnection().sendMessage(new Message("Surrender;W"));   // W - win
+                }
+            }
+        }
+        return "Surrender;L";  // L - lose
+    }
 }
