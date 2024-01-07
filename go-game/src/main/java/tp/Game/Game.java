@@ -41,8 +41,9 @@ public class Game {
 
     public Message launch()
     {
-        // choose game with user or bot
-        // display the board
+        /**
+         * TODO: tu trzeba bedzie stworzyc okno startowe umozliwiajace wybor tak jak ponizej
+         */
         this.running = true;
         System.out.println("Launch Game");
 

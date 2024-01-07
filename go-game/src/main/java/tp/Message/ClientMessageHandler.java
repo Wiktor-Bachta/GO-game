@@ -3,6 +3,8 @@ package tp.Message;
 import tp.Client.Client;
 import tp.Client.ClientState;
 
+import java.io.IOException;
+
 public class ClientMessageHandler {
 
     /**
@@ -14,7 +16,7 @@ public class ClientMessageHandler {
         this.client = client;
     }
 
-    public void handleMessage(Message message) {
+    public void handleMessage(Message message) throws IOException {
         String msg = message.getMessage();
         String[] msgArray = msg.split(";");
         String msgType = msgArray[0];
@@ -24,22 +26,22 @@ public class ClientMessageHandler {
                 handleLaunch(msgArray);
                 break;
             case "Disconnect":
-                System.out.println("Disconnect");
+                handleDisconnect();
                 break;
             case "Move":
                 handleMove(msgArray);
                 break;
             case "Pass":
-                System.out.println("Pass");
+                handlePass();
                 break;
             case "Surrender":
-                System.out.println("Surrender");
+                handleSurrender();
                 break;
             case "Chat":
                 System.out.println("Chat");
                 break;
             case "Error":
-                System.out.println("Error");
+                handleError();
                 break;
             case "Wait":
                 handleWait();
@@ -51,11 +53,9 @@ public class ClientMessageHandler {
 
     }
 
-    private void handleLaunch(String msgArray[]) {
+    private void handleLaunch(String msgArray[]) throws IOException {
         switch (msgArray[1]) {
             case "Start":
-                //TODO: display the board and start the game
-                System.out.println("Start Game");
                 client.getGame().setId(msgArray[2]);
 
                 if(msgArray[3].equals("Move"))
@@ -66,17 +66,19 @@ public class ClientMessageHandler {
                 client.displayBoard();
                 break;
             case "Error":
-                //TODO: display the error message
-                System.out.println("Error:" + msgArray[2]);
                 client.displayError(msgArray[2]);
+                client.getGame().launch();  // Launch again
                 break;
             case "Wait":
-                //TODO: display the ID to share with user
-                //System.out.println("Wait for user to join: ID: " + msgArray[2]);
                 client.displayMessage("Wait for user to join: ID: " + msgArray[2]);
+                while(true)
+                {
+                    Message serverMessage = client.getServerConnection().getResponse();
+                    handleMessage(serverMessage);
+                    break;
+                }
                 break;
             default:
-                System.out.println("Launch: Unknown message type");
                 client.displayError("Launch: Unknown message type");
                 break;
         }
@@ -85,11 +87,17 @@ public class ClientMessageHandler {
 
     private void handleMove(String msgArray[]) {
         /**
-         * TODO: display the board with updated the move
+         * TODO: refresh planszy z zauktualizowanym ruchem
          */
         System.out.println("Get Move: " + msgArray[1] + ";" + msgArray[2]);
         client.setState(ClientState.DOING_MOVE);
 
+    }
+    private void handleDisconnect() {
+        /**
+         * TODO: tu trzeba stowrzyc gui z informacja o rozlaczeniu i moze czekanie np 10 sekund na ponowne polaczenie
+         * jak nie to wyjscie z gry
+         */
     }
 
     private void handleWait() {
@@ -97,5 +105,14 @@ public class ClientMessageHandler {
          *  Wait for user to make a move
          */
         System.out.println("Wait for move");
+    }
+
+    private void handlePass() {
+    }
+
+    private void handleSurrender() {
+    }
+
+    private void handleError() {
     }
 }

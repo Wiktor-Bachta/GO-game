@@ -1,6 +1,9 @@
 package tp.Server;
 
 import tp.Client.Client;
+import tp.Game.Move;
+import tp.GameLogic.MoveAnalyzer;
+import tp.Message.Message;
 
 import java.util.UUID;
 
@@ -9,17 +12,21 @@ public class Session {
     private ClientHandler player1;
     private ClientHandler player2;
 
+    private MoveAnalyzer moveAnalyzer;
+
     private boolean ableToJoin = true;
 
     public Session(ClientHandler player1) {
         this.ID = generateID();
         this.player1 = player1;
-
+        this.moveAnalyzer = new MoveAnalyzer();
     }
 
 
     private String generateID() {
-           return UUID.randomUUID().toString();
+        UUID uuid = UUID.randomUUID();
+        String str = uuid.toString();
+        return str.substring(0, 6);
     }
 
     public String getID() {
@@ -33,6 +40,7 @@ public class Session {
 
     public void addPlayer2(){
         //TODO: add bot
+
         ableToJoin = false;
     }
 
@@ -46,5 +54,9 @@ public class Session {
 
     public boolean isAbleToJoin() {
         return ableToJoin;
+    }
+
+    public Message analyzeMove(Move move) {
+        return moveAnalyzer.analyzeMove(move);
     }
 }

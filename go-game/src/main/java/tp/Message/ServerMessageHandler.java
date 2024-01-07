@@ -1,5 +1,6 @@
 package tp.Message;
 
+import tp.Game.Move;
 import tp.Server.ClientHandler;
 import tp.Server.Session;
 
@@ -67,7 +68,7 @@ public class ServerMessageHandler {
                     session.addPlayer2();
                     sessions.add(session);
 
-                    // randomize who goes first
+                    // randomize who goes first - black always goes first
                     int random = (int)(Math.random() * 2);
                     if(random == 0) {
                         response = "Launch;"+"Start;"+sessionID+";"+"Wait";
@@ -97,16 +98,17 @@ public class ServerMessageHandler {
                         if(s.isAbleToJoin()) {
                             s.addPlayer2(clientHandler);
 
-                            // randomize who goes first
-                            int random = (int)(Math.random() * 2);
-                            if(random == 0) {
+                            // randomize who goes first - black always goes first
+                            double random = Math.random();
+
+                            if(random < 0.5) {
                                 response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Wait";
                                 s.getPlayer1().getClientConnection().sendMessage(new Message(response));
                                 response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Move";
                             }
                             else {
                                 response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Move";
-                                s.getPlayer2().getClientConnection().sendMessage(new Message(response));
+                                s.getPlayer1().getClientConnection().sendMessage(new Message(response));
                                 response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Wait";
                             }
 
@@ -136,12 +138,16 @@ public class ServerMessageHandler {
         String y = msgArray[2];
         String sessionID = msgArray[3];
 
+        Move move = new Move(x+";"+y);
+
+
         for(Session s : sessions) {
             if(s.getID().equals(sessionID)) {
+                Message response = s.analyzeMove(move);
                 if(s.getPlayer1().equals(clientHandler)) {
-                    s.getPlayer2().getClientConnection().sendMessage(new Message("Move;"+x+";"+y+";"));
+                    s.getPlayer2().getClientConnection().sendMessage(response);
                 } else {
-                    s.getPlayer1().getClientConnection().sendMessage(new Message("Move;"+x+";"+y+";"));
+                    s.getPlayer1().getClientConnection().sendMessage(response);
                 }
             }
         }
