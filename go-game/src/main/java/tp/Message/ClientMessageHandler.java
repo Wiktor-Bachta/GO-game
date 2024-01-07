@@ -35,7 +35,7 @@ public class ClientMessageHandler {
                 handlePass();
                 break;
             case "Surrender":
-                handleSurrender();
+                handleSurrender(msgArray[1]);
                 break;
             case "Chat":
                 System.out.println("Chat");
@@ -47,6 +47,7 @@ public class ClientMessageHandler {
                 handleWait();
                 break;
             default:
+                System.out.println(msg);
                 System.out.println("Unknown message type");
                 break;
         }
@@ -108,11 +109,31 @@ public class ClientMessageHandler {
     }
 
     private void handlePass() {
+        /**
+         * User passed
+         */
+        System.out.println("User passed");
+        client.setState(ClientState.DOING_MOVE);
     }
 
-    private void handleSurrender() {
+    private void handleSurrender(String result) {
+        /**
+         * User surrendered
+         */
+        if(result.equals("L"))
+            System.out.println("You surrendered. You lost!");
+        else if(result.equals("W"))
+            System.out.println("User surrendered. You won!");
+        client.getGame().stopGame();
+        /**
+         * TODO: tu trzeba stworzyc gui z informacja o wygranej i moze propozycja rewanzu albo wyjscie z gry
+         */
     }
 
     private void handleError() {
+        /**
+         * TODO: tu trzeba stworzyc gui z errorem
+         */
+        System.out.println("Error");
     }
 }
