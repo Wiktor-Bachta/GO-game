@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class Game {
     String ID;
     boolean running;
-
     Client client;
     public Game(Client client) {
         this.client = client;
@@ -25,16 +24,30 @@ public class Game {
     }
 
     public Message doMove() {
-        // send move to server
-        // get move from user
+        /**
+         * TODO: tu trzeba bedzie stworzyc okno umozliwiajace wybor ruchu ewentualnie button pass i resign
+         */
+
+        boolean pass = false;
+        boolean resign = false;
+
+        client.setState(ClientState.WAITING_FOR_MOVE);
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter move X: ");
         String Xmove = scanner.nextLine();
 
+        if(Xmove.equals("pass")) {
+            pass = true;
+            return new Message("Pass;"+ID+";");
+        }
+        else if(Xmove.equals("resign")) {
+            resign = true;
+            return new Message("Surrender;"+ID+";");
+        }
+
         System.out.println("Enter move Y: ");
         String Ymove = scanner.nextLine();
-
-        client.setState(ClientState.WAITING_FOR_MOVE);
 
         return new Message("Move;"+Xmove+";"+Ymove+";"+ID+";");
     }
@@ -57,10 +70,14 @@ public class Game {
 
         String msg = "Launch;";
 
+        boolean validChoice = false;
+        while(!validChoice)
+        {
         switch (choice) {
             case 1:
                 System.out.println("Play with bot");
                 msg = createGame(msg,"bot");
+                validChoice = true;
                 break;
             case 2:
                 System.out.println("Play with user");
@@ -72,18 +89,20 @@ public class Game {
                     msg = createGame(msg,"user");
                 else if(gameChoice.equals("b"))
                     msg = joinGame(msg);
-
+                validChoice = true;
                 break;
             case 3:
                 System.out.println("Exit");
                 running = false;
                 msg = "Disconnect";
+                validChoice = true;
                 break;
             default:
                 System.out.println("Invalid choice");
                 running = false;
                 msg = "Disconnect";
                 break;
+        }
         }
         return new Message(msg);
     }
@@ -104,8 +123,8 @@ public class Game {
         return msg+"Join;"+gameId+";";
     }
 
-    private void stopGame() {
-        System.out.println("Game over");
+    public void stopGame() {
+        System.out.println("Bye");
         running = false;
     }
     public boolean isRunning() {
