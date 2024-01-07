@@ -10,19 +10,16 @@ import java.io.*;
 
 public class Client {
 
-    private static int nextId = 1;     // id generator
-    private int id;        // unique id
     private Game game;
     private ClientState state;
     private ServerConnection serverConnection;
     private ClientMessageHandler clientMessageHandler;
 
     public Client() throws IOException {
-        this.id = nextId++;
         this.game = new Game(this);
         this.serverConnection = new ServerConnection("localhost", 8000);
         this.clientMessageHandler = new ClientMessageHandler(this);
-        this.state = ClientState.WAITING_FOR_MOVE;
+        this.state = ClientState.SETTING_UP;
     }
 
     public void run(){
@@ -32,20 +29,11 @@ public class Client {
             Message launchMessage= game.launch();
             serverConnection.sendMessage(launchMessage);
 
-            Message launchReceivedMessage = serverConnection.getResponse();
-            clientMessageHandler.handleMessage(launchReceivedMessage);
-
-            if(launchReceivedMessage.getMessage().contains("Wait"))
+            while(state == ClientState.SETTING_UP)
             {
-                    while(true)
-                    {
-                        Message serverMessage = serverConnection.getResponse();
-                        clientMessageHandler.handleMessage(serverMessage);
-                        if(serverMessage.getMessage().contains("Start"))
-                            break;
-                    }
+                Message serverMessage = serverConnection.getResponse();
+                clientMessageHandler.handleMessage(serverMessage);
             }
-
 
             while (game.isRunning()) {
 
@@ -100,13 +88,21 @@ public class Client {
     }
 
     public void displayError(String error) {
+        /**
+         * TODO: tutaj osobne gui z errorem
+         */
         System.out.println(error);
     }
 
     public void displayMessage(String message) {
+        /**
+         * TODO: tutaj osobne gui z message
+         */
         System.out.println(message);
     }
 
-
+    public ServerConnection getServerConnection() {
+        return serverConnection;
+    }
 
 }
