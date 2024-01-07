@@ -2,14 +2,10 @@ package tp.Client;
 
 import tp.Connection.ServerConnection;
 import tp.Game.Game;
-import tp.Game.Move;
 import tp.Message.ClientMessageHandler;
 import tp.Message.Message;
 
 import java.io.*;
-import java.net.*;
-import java.util.Scanner;
-
 
 
 public class Client {
@@ -17,14 +13,16 @@ public class Client {
     private static int nextId = 1;     // id generator
     private int id;        // unique id
     private Game game;
+    private ClientState state;
     private ServerConnection serverConnection;
     private ClientMessageHandler clientMessageHandler;
 
     public Client() throws IOException {
         this.id = nextId++;
-        this.game = new Game();
+        this.game = new Game(this);
         this.serverConnection = new ServerConnection("localhost", 8000);
-        this.clientMessageHandler = new ClientMessageHandler();
+        this.clientMessageHandler = new ClientMessageHandler(this);
+        this.state = ClientState.WAITING_FOR_MOVE;
     }
 
     public void run(){
@@ -37,15 +35,37 @@ public class Client {
             Message launchReceivedMessage = serverConnection.getResponse();
             clientMessageHandler.handleMessage(launchReceivedMessage);
 
+            if(launchReceivedMessage.getMessage().contains("Wait"))
+            {
+                    while(true)
+                    {
+                        Message serverMessage = serverConnection.getResponse();
+                        clientMessageHandler.handleMessage(serverMessage);
+                        if(serverMessage.getMessage().contains("Start"))
+                            break;
+                    }
+            }
+
 
             while (game.isRunning()) {
-                Move move = game.doMove();
 
-                serverConnection.sendMessage(new Message(move.getMove()));
+                switch (state) {
+                    case DOING_MOVE:
+                        System.out.println("DOING MOVE");
+                        Message clientMessage = game.doMove();
+                        serverConnection.sendMessage(clientMessage);
 
-                Message message = serverConnection.getResponse();
+                        break;
+                    case WAITING_FOR_MOVE:
+                        System.out.println("WAITING FOR MOVE");
+                        Message serverMessage = serverConnection.getResponse();
+                        clientMessageHandler.handleMessage(serverMessage);
+                        break;
+                    default:
+                        System.out.println("Unknown state");
+                        break;
+                }
 
-                game.handleResponse(message.getMessage());
             }
         } catch (IOException e) {
             System.out.println("Client exception: " + e.getMessage());
@@ -58,7 +78,34 @@ public class Client {
     }
 
 
+    public void setState(ClientState state) {
+        this.state = state;
+    }
 
+    public ClientState getState() {
+        return state;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void displayBoard() {
+        /**
+         * TODO: display the board
+         * tutaj trzeba wysiwetlic plansze ( nie wiem czy nie jako nowy watek)
+         * klikniecie spowoduje zwrocenie ruchu w postaci message w postci Move;X;Y;ID (ID to id gry)
+         *
+         */
+    }
+
+    public void displayError(String error) {
+        System.out.println(error);
+    }
+
+    public void displayMessage(String message) {
+        System.out.println(message);
+    }
 
 
 

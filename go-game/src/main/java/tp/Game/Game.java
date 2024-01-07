@@ -1,39 +1,42 @@
 package tp.Game;
 
+import tp.Client.Client;
+import tp.Client.ClientState;
 import tp.Message.Message;
 
 import java.util.Scanner;
 
 public class Game {
-    static int nextId = 1;
-    int id;
+    String ID;
     boolean running;
-    public Game() {
-        this.id = nextId++;
+
+    Client client;
+    public Game(Client client) {
+        this.client = client;
+
     }
 
-    public int getId() {
-        return id;
+    public String getId() {
+        return ID;
     }
 
-    public Move doMove() {
+    public void setId(String id) {
+        this.ID = id;
+    }
+
+    public Message doMove() {
         // send move to server
         // get move from user
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter move: ");
-        String moveString = scanner.nextLine();
+        System.out.println("Enter move X: ");
+        String Xmove = scanner.nextLine();
 
-        return new Move(moveString);
-    }
+        System.out.println("Enter move Y: ");
+        String Ymove = scanner.nextLine();
 
-    public void handleResponse(String moveString) {
-        // receive move from server
-        // here can be  a factory method to read if message is a move, info or error
-        System.out.println("Get move: " + moveString);
+        client.setState(ClientState.WAITING_FOR_MOVE);
 
-        if(moveString.contains("endgame")) {
-            stopGame();
-        }
+        return new Message("Move;"+Xmove+";"+Ymove+";"+ID+";");
     }
 
     public Message launch()
