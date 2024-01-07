@@ -9,16 +9,10 @@ import java.util.Scanner;
 public class Game {
     String ID;
     boolean running;
-<<<<<<< HEAD
-<<<<<<< HEAD
     Board board;
 
-=======
->>>>>>> kuba
-=======
     Board board;
 
->>>>>>> 718867d9e4e5ccd2755de9180b3193cf87f73022
     Client client;
     public Game(Client client) {
         this.client = client;
