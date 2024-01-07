@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Game {
     String ID;
     boolean running;
+    Board board;
 
     Client client;
     public Game(Client client) {

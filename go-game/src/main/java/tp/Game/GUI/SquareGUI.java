@@ -1,16 +1,17 @@
 package tp.Game.GUI;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import tp.Game.Square;
+import tp.Message.Message;
 
 public class SquareGUI extends Rectangle {
+    Square square;
     Circle circle;
 
-    public SquareGUI(int x, int y, int size) {
+    public SquareGUI(int x, int y, int size, Square sqaure) {
+        this.square = sqaure;
         setFill(Color.SANDYBROWN);
         setWidth(size);
         setHeight(size);
@@ -23,6 +24,7 @@ public class SquareGUI extends Rectangle {
         });
         setOnMouseEntered(event -> {
             setFill(Color.DARKGRAY);
+            square.sendMessage();
         });
 
         setOnMouseExited(event -> {
