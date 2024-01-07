@@ -24,7 +24,7 @@ public class BoardGUI {
         squaresGUI = new SquareGUI[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                squares[i][j].setSquareGUI(new SquareGUI(i, j, squareSize));
+                squares[i][j].setSquareGUI(new SquareGUI(i, j, squareSize, squares[i][j]));
                 squaresGUI[i][j] = squares[i][j].getSquareGUI();
                 pane.getChildren().add(squaresGUI[i][j]);
                 pane.getChildren().add(squaresGUI[i][j].getCircle());
