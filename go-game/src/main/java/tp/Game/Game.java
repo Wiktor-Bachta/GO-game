@@ -26,7 +26,7 @@ public class Game {
 
     public Message doMove() {
         /**
-         * TODO: tu trzeba bedzie stworzyc okno umozliwiajace wybor ruchu ewentualnie button pass i resign
+         * TODO: tu trzeba bedzie stworzyc okno umozliwiajace wybor ruchu ewentualnie button pass i  resign
          */
 
         boolean pass = false;
