@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import tp.Game.Board;
 
-
 public class ChoiceGUI extends Application {
 
     HBox pane;
@@ -24,17 +23,17 @@ public class ChoiceGUI extends Application {
         pane.getChildren().addAll(playBot, playUser, exit);
     }
 
-    @Override 
+    @Override
     public void start(Stage primaryStage) {
 
-        Scene scene = new Scene(pane, 400,400);
+        Scene scene = new Scene(pane, 400, 400);
         primaryStage.setResizable(false);
         primaryStage.setTitle("choiceGUI");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    
-    public static void main(String[] args) {
-        launch(args);
+
+    public static void run() {
+        launch();
     }
 }
