@@ -31,13 +31,15 @@ public class ClientHandler implements Runnable {
             while (gameRunning) {
                 Message message = clientConnection.getResponse();
 
+                System.out.println("Received message: " + message.getMessage());
+
                 message = messageHandler.handleMessage(message);
 
                 if(message.getMessage().equals("Launch;Disconnect")) {
                     stopGame();
                     break;
                 }
-                System.out.println("Received message: " + message.getMessage());
+                System.out.println("Sent message: " + message.getMessage());
 
                 clientConnection.sendMessage(message);
             }

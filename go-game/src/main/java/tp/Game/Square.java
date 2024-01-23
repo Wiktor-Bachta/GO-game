@@ -6,12 +6,14 @@ import tp.Game.GUI.SquareGUI;
 public class Square {
     private int x, y;
     private SquareGUI squareGUI;
+    private SquareState squareState;
     Board board;
 
     public Square(int x, int y, Board board) {
         this.x = x;
         this.y = y;
         this.board = board;
+        squareState = SquareState.EMPTY;
     }
 
     public int getX() {

@@ -2,6 +2,7 @@ package tp.Message;
 
 import tp.Client.Client;
 import tp.Client.ClientState;
+import tp.Client.GUI.ClientColor;
 
 import java.io.IOException;
 
@@ -59,25 +60,32 @@ public class ClientMessageHandler {
             case "Start":
                 client.getGame().setId(msgArray[2]);
 
-                if(msgArray[3].equals("Move"))
+                if(msgArray[3].equals("Move")) {
+                    client.getClientGUI().setClientColor(ClientColor.BLACK);
                     client.setState(ClientState.DOING_MOVE);
-                else
+                    client.getClientGUI().displayBoard();
+                }
+                else {
                     client.setState(ClientState.WAITING_FOR_MOVE);
-
+                    client.getClientGUI().setClientColor(ClientColor.WHITE);
+                    client.getClientGUI().displayBoard();
+                }
                 client.displayBoard();
                 break;
             case "Error":
                 client.displayError(msgArray[2]);
-                client.getGame().launch();  // Launch again
+                //client.getGame().launch();  // Launch again
                 break;
             case "Wait":
-                client.displayMessage("Wait for user to join: ID: " + msgArray[2]);
-                while(true)
+                //client.displayMessage("Wait for user to join: ID: " + msgArray[2]);
+                client.getClientGUI().getChoiceGUI().displayID("Wait for user to join: ID: " + msgArray[2]);
+                
+                /* while(true)
                 {
                     Message serverMessage = client.getServerConnection().getResponse();
                     handleMessage(serverMessage);
                     break;
-                }
+                } */
                 break;
             default:
                 client.displayError("Launch: Unknown message type");

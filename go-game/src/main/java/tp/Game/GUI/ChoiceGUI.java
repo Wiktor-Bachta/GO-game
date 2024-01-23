@@ -1,39 +1,85 @@
 package tp.Game.GUI;
 
-import javafx.application.Application;
+import java.io.IOException;
+
+import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import tp.Game.Board;
+import tp.Client.Client;
+import tp.Message.Message;
 
-public class ChoiceGUI extends Application {
+public class ChoiceGUI extends VBox {
+    private String msg;
+    private Client client;
+    Label idLabel;
+    private Stage popupStage;
 
-    HBox pane;
-    Button playBot;
-    Button playUser;
-    Button exit;
+    public ChoiceGUI(Client client) {
+        this.client = client;
 
-    public ChoiceGUI() {
-        pane = new HBox(10);
-        playBot = new Button("Play with a bot");
-        playUser = new Button("Play with user");
-        exit = new Button("exit");
-        pane.getChildren().addAll(playBot, playUser, exit);
+        Button playWithBotButton = new Button("Play with bot");
+        Button playWithUserButton = new Button("Play with user");
+        Button exitButton = new Button("Exit");
+        VBox playWithUserVBox = new VBox();
+        Button createGameButton = new Button("Create game");
+        Button joinGameButton = new Button("Join game");
+        TextField idTextField = new TextField("Wpisz id");
+        idLabel = new Label();
+        playWithUserVBox.setPadding(new Insets(10, 10, 10, 10));
+        playWithUserVBox.getChildren().addAll(createGameButton, idLabel, joinGameButton, idTextField);
+
+        playWithBotButton.setOnAction(e -> {
+            msg = "Launch;Create;bot";
+            client.getServerConnection().sendMessage(new Message(msg));
+        });
+
+        playWithUserButton.setOnAction(e -> {
+            popupStage = new Stage();
+            Scene scene = new Scene(playWithUserVBox, 400, 400);
+            popupStage.setScene(scene);
+            popupStage.show();
+        });
+
+        exitButton.setOnAction(e -> {
+            msg = "Disconnect";
+            client.getServerConnection().sendMessage(new Message(msg));
+        });
+
+        createGameButton.setOnAction(e -> {
+            msg = "Launch;Create;user";
+            client.getServerConnection().sendMessage(new Message(msg));
+        });
+
+        joinGameButton.setOnAction(e -> {
+            String id = idTextField.getText();
+            if (!id.isEmpty()) {
+                msg = "Launch;Join;" + id + ";";
+                client.getServerConnection().sendMessage(new Message(msg));
+            }
+        });
+
+        setSpacing(10);
+        setPadding(new Insets(10, 10, 10, 10));
+        getChildren().addAll(playWithBotButton, playWithUserButton, exitButton);
+
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-
-        Scene scene = new Scene(pane, 400, 400);
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("choiceGUI");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public String getMsg() {
+        return msg;
     }
 
-    public static void run() {
-        launch();
+    public void displayID(String idMessage) {
+        Platform.runLater(() -> {
+            idLabel.setText(idMessage);
+        });
+    }
+
+    public void terminateChoiceGUI() {
+        popupStage.close();
     }
 }

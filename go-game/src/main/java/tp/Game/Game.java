@@ -2,18 +2,24 @@ package tp.Game;
 
 import tp.Client.Client;
 import tp.Client.ClientState;
+import tp.Game.GUI.ChoiceGUI;
 import tp.Message.Message;
 
 import java.util.Scanner;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 
 public class Game {
     String ID;
     boolean running;
     Board board;
     Client client;
+
     public Game(Client client) {
         this.client = client;
-
+        board = new Board(19, 19*40);
     }
 
     public String getId() {
@@ -26,7 +32,8 @@ public class Game {
 
     public Message doMove() {
         /**
-         * TODO: tu trzeba bedzie stworzyc okno umozliwiajace wybor ruchu ewentualnie button pass i  resign
+         * TODO: tu trzeba bedzie stworzyc okno umozliwiajace wybor ruchu ewentualnie
+         * button pass i resign
          */
 
         boolean pass = false;
@@ -38,97 +45,52 @@ public class Game {
         System.out.println("Enter move X: ");
         String Xmove = scanner.nextLine();
 
-        if(Xmove.equals("pass")) {
+        if (Xmove.equals("pass")) {
             pass = true;
-            return new Message("Pass;"+ID+";");
-        }
-        else if(Xmove.equals("resign")) {
+            return new Message("Pass;" + ID + ";");
+        } else if (Xmove.equals("resign")) {
             resign = true;
-            return new Message("Surrender;"+ID+";");
+            return new Message("Surrender;" + ID + ";");
         }
 
         System.out.println("Enter move Y: ");
         String Ymove = scanner.nextLine();
 
-        return new Message("Move;"+Xmove+";"+Ymove+";"+ID+";");
+        return new Message("Move;" + Xmove + ";" + Ymove + ";" + ID + ";");
     }
 
-    public Message launch()
-    {
-        /**
-         * TODO: tu trzeba bedzie stworzyc okno startowe umozliwiajace wybor tak jak ponizej
-         */
-        this.running = true;
-        System.out.println("Launch Game");
+/*     public Message launch() {
+        choiceGUI = new ChoiceGUI();
+        Thread thread = new Thread(() -> {
+            Application.launch(ChoiceGUI.class);
+        });
+        Platform.runLater(() -> {
+            try {
+                thread.start();
+                thread.join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+        while (!choiceGUI.isChoiceMade()) {
 
-        System.out.println("Choose: ");
-        System.out.println("1. Play with bot");
-        System.out.println("2. Play with user");
-        System.out.println("3. Exit");
-
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-
-        String msg = "Launch;";
-
-        boolean validChoice = false;
-        while(!validChoice)
-        {
-        switch (choice) {
-            case 1:
-                System.out.println("Play with bot");
-                msg = createGame(msg,"bot");
-                validChoice = true;
-                break;
-            case 2:
-                System.out.println("Play with user");
-                System.out.println("a. Create game");
-                System.out.println("b. Join game");
-
-                String gameChoice = scanner.next();
-                if(gameChoice.equals("a"))
-                    msg = createGame(msg,"user");
-                else if(gameChoice.equals("b"))
-                    msg = joinGame(msg);
-                validChoice = true;
-                break;
-            case 3:
-                System.out.println("Exit");
-                running = false;
-                msg = "Disconnect";
-                validChoice = true;
-                break;
-            default:
-                System.out.println("Invalid choice");
-                running = false;
-                msg = "Disconnect";
-                break;
         }
-        }
-        return new Message(msg);
-    }
+        System.out.println(choiceGUI.getMsg());
+        return new Message(choiceGUI.getMsg());
 
-    private String createGame(String msg,String opponent) {
-        // create game
-        // wait for user to join
-        // start game
-        return msg+"Create;"+opponent+";";
-    }
-
-    private String joinGame(String msg) {
-        // join game
-        // type game id
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter game id: ");
-        String gameId = scanner.nextLine();
-        return msg+"Join;"+gameId+";";
-    }
+    } */
 
     public void stopGame() {
         System.out.println("Bye");
         running = false;
     }
+
     public boolean isRunning() {
         return running;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 }

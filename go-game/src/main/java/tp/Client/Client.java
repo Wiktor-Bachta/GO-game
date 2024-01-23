@@ -1,12 +1,18 @@
 package tp.Client;
 
+import tp.Client.GUI.ClientGUI;
 import tp.Connection.ServerConnection;
 import tp.Game.Game;
+import tp.Game.GUI.ChoiceGUI;
 import tp.Message.ClientMessageHandler;
 import tp.Message.Message;
+import tp.Server.ClientHandler;
 
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
+import javafx.application.Platform;
 
 public class Client {
 
@@ -14,23 +20,34 @@ public class Client {
     private ClientState state;
     private ServerConnection serverConnection;
     private ClientMessageHandler clientMessageHandler;
+    private ClientGUI clientGUI;
 
-    public Client() throws IOException {
+    public Client(ClientGUI clientGUI) {
         this.game = new Game(this);
-        this.serverConnection = new ServerConnection("localhost", 8000);
+        this.clientGUI = clientGUI;
+        try {
+            this.serverConnection = new ServerConnection("localhost", 8000);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         this.clientMessageHandler = new ClientMessageHandler(this);
         this.state = ClientState.SETTING_UP;
     }
 
-    public void run(){
-        System.out.println("Client started");
-        try {
+    public void run() {
 
-            Message launchMessage= game.launch();
-            serverConnection.sendMessage(launchMessage);
+                try {
+                    new Thread(new ServerHandler(serverConnection, clientMessageHandler)).start();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
-            while(state == ClientState.SETTING_UP)
-            {
+        /* try {
+            
+
+            while (state == ClientState.SETTING_UP) {
                 Message serverMessage = serverConnection.getResponse();
                 clientMessageHandler.handleMessage(serverMessage);
             }
@@ -57,13 +74,13 @@ public class Client {
         } catch (IOException e) {
             System.out.println("Client exception: " + e.getMessage());
             e.printStackTrace();
-        }
+        } */
+
     }
 
     public void stop() {
         System.out.println("Client stop");
     }
-
 
     public void setState(ClientState state) {
         this.state = state;
@@ -81,7 +98,8 @@ public class Client {
         /**
          * TODO: display the board
          * tutaj trzeba wysiwetlic plansze ( nie wiem czy nie jako nowy watek)
-         * klikniecie spowoduje zwrocenie ruchu w postaci message w postci Move;X;Y;ID (ID to id gry)
+         * klikniecie spowoduje zwrocenie ruchu w postaci message w postci Move;X;Y;ID
+         * (ID to id gry)
          *
          */
     }
@@ -104,4 +122,7 @@ public class Client {
         return serverConnection;
     }
 
+    public ClientGUI getClientGUI() {
+        return clientGUI;
+    }
 }

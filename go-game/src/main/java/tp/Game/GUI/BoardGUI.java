@@ -4,9 +4,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import tp.Client.Client;
 import tp.Game.Square;
 
 public class BoardGUI {
+
+    private Client client;
 
     Pane pane;
     SquareGUI[][] squaresGUI;
@@ -16,7 +19,9 @@ public class BoardGUI {
     int pixelSize;
     int squareSize;
 
-    public BoardGUI(int size, int pixelSize, Square[][] squares) {
+    public BoardGUI( int size, int pixelSize, Square[][] squares) {
+        //this.client = client;
+
         this.pixelSize = pixelSize;
         this.size = size;
         squareSize = pixelSize / size;

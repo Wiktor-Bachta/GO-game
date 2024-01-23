@@ -14,6 +14,9 @@ public class ServerConnection extends Connection {
 
         super(localhost, port);
     }
+    public ServerConnection(Socket socket) throws Exception {
+        super(socket);
+    }
 
     public void sendMessage(Message message) {
         output.println(message.getMessage());
