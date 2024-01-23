@@ -11,13 +11,15 @@ public class ServerMessageHandler {
 
     List<Session> sessions;
     ClientHandler clientHandler;
+
     public ServerMessageHandler(List<Session> sessions, ClientHandler clientHandler) {
         this.sessions = sessions;
         this.clientHandler = clientHandler;
     }
 
     /**
-     * Server automatically handles the message and returns a response, it doesnt wait for anything
+     * Server automatically handles the message and returns a response, it doesnt
+     * wait for anything
      *
      */
     public Message handleMessage(Message message) throws IOException {
@@ -55,36 +57,35 @@ public class ServerMessageHandler {
     }
 
     private String handleLaunch(String gameType, String opponent) throws IOException {
-        String response="";
+        String response = "";
 
         switch (gameType) {
             case "Create":
                 Session session = new Session(clientHandler);
                 String sessionID = session.getID();
 
-                if(opponent.equals("bot")) {
+                if (opponent.equals("bot")) {
                     System.out.println("Play with bot");
                     session.addPlayer2();
                     sessions.add(session);
 
                     // randomize who goes first - black always goes first
-                    int random = (int)(Math.random() * 2);
-                    if(random == 0) {
-                        response = "Launch;"+"Start;"+sessionID+";"+"Wait";
+                    int random = (int) (Math.random() * 2);
+                    if (random == 0) {
+                        response = "Launch;" + "Start;" + sessionID + ";" + "Wait";
                         session.getPlayer1().getClientConnection().sendMessage(new Message(response));
-                        response = "Launch;"+"Start;"+sessionID+";"+"Move";
-                    }
-                    else {
-                        response = "Launch;"+"Start;"+sessionID+";"+"Move";
+                        response = "Launch;" + "Start;" + sessionID + ";" + "Move";
+                    } else {
+                        response = "Launch;" + "Start;" + sessionID + ";" + "Move";
                         session.getPlayer2().getClientConnection().sendMessage(new Message(response));
-                        response = "Launch;"+"Start;"+sessionID+";"+"Wait";
+                        response = "Launch;" + "Start;" + sessionID + ";" + "Wait";
                     }
 
                 } else {
                     System.out.println("Play with user");
-                    //TODO: display ID to share with user
+                    // TODO: display ID to share with user
                     sessions.add(session);
-                    response = "Launch;"+"Wait;"+sessionID+";";
+                    response = "Launch;" + "Wait;" + sessionID + ";";
                 }
                 break;
             case "Join":
@@ -92,41 +93,41 @@ public class ServerMessageHandler {
                 String sessionIDToJoin = opponent;
 
                 boolean sessionExists = false;
-                for(Session s : sessions) {
-                    if(s.getID().equals(sessionIDToJoin)) {        // name collision bc opponent is gameID for join msg and opponent type for create msg
-                        if(s.isAbleToJoin()) {
+                for (Session s : sessions) {
+                    if (s.getID().equals(sessionIDToJoin)) { // name collision bc opponent is gameID for join msg and
+                                                             // opponent type for create msg
+                        if (s.isAbleToJoin()) {
                             s.addPlayer2(clientHandler);
 
                             // randomize who goes first - black always goes first
                             double random = Math.random();
 
-                            if(random < 0.5) {
-                                response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Wait";
+                            if (random < 0.5) {
+                                response = "Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait";
                                 s.getPlayer1().getClientConnection().sendMessage(new Message(response));
-                                response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Move";
-                            }
-                            else {
-                                response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Move";
+                                response = "Launch;" + "Start;" + sessionIDToJoin + ";" + "Move";
+                            } else {
+                                response = "Launch;" + "Start;" + sessionIDToJoin + ";" + "Move";
                                 s.getPlayer1().getClientConnection().sendMessage(new Message(response));
-                                response = "Launch;"+"Start;"+sessionIDToJoin+";"+"Wait";
+                                response = "Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait";
                             }
 
                             System.out.println("Session joined");
                         } else {
                             System.out.println("Session is full");
-                            response = "Launch;"+"Error;Session is full;";
+                            response = "Launch;" + "Error;Session is full;";
                         }
                         sessionExists = true;
                     }
                 }
-                if(!sessionExists) {
+                if (!sessionExists) {
                     System.out.println("Session does not exist");
-                    response = "Launch;"+"Error;Session does not exist;";
+                    response = "Launch;" + "Error;Session does not exist;";
                 }
                 break;
             default:
                 System.out.println("Unknown launch message");
-                response = "Launch;"+"Error;Unknown launch message;";
+                response = "Launch;" + "Error;Unknown launch message;";
                 break;
         }
         return response;
@@ -137,21 +138,26 @@ public class ServerMessageHandler {
         String y = msgArray[2];
         String sessionID = msgArray[3];
 
-        Move move = new Move(x+";"+y);
+        Move move = new Move(x + ";" + y);
 
-
-        for(Session s : sessions) {
-            if(s.getID().equals(sessionID)) {
-                //Message response = s.analyzeMove(move);
-                Message response = new Message("Move;Confirmed;" + msgArray[1] + ";" + msgArray[2] + ";"); //just resend move for now
-                if(s.getPlayer1().equals(clientHandler)) {
-                    s.getPlayer1().getClientConnection().sendMessage(response);
-                    response = new Message("Move;New;" + msgArray[1] + ";" + msgArray[2] + ";");
-                    s.getPlayer2().getClientConnection().sendMessage(response);
+        for (Session s : sessions) {
+            if (s.getID().equals(sessionID)) {
+                boolean valid = s.analyzeMove(move);
+                if (valid) {
+                    if (s.getPlayer1().equals(clientHandler)) {
+                        Message response = new Message("Move;Confirmed;" + msgArray[1] + ";" + msgArray[2] + ";");
+                        s.getPlayer1().getClientConnection().sendMessage(response);
+                        response = new Message("Move;New;" + msgArray[1] + ";" + msgArray[2] + ";");
+                        s.getPlayer2().getClientConnection().sendMessage(response);
+                    } else {
+                        Message response = new Message("Move;Confirmed;" + msgArray[1] + ";" + msgArray[2] + ";");
+                        s.getPlayer2().getClientConnection().sendMessage(response);
+                        response = new Message("Move;New;" + msgArray[1] + ";" + msgArray[2] + ";");
+                        s.getPlayer1().getClientConnection().sendMessage(response);
+                    }
                 } else {
-                    s.getPlayer2().getClientConnection().sendMessage(response);
-                    response = new Message("Move;New;" + msgArray[1] + ";" + msgArray[2] + ";");
-                    s.getPlayer1().getClientConnection().sendMessage(response);
+                    Message response = new Message("Move;Invalid;");
+                    clientHandler.getClientConnection().sendMessage(response);
                 }
             }
         }
@@ -160,9 +166,9 @@ public class ServerMessageHandler {
     }
 
     private String handlePass(String sessionID) throws IOException {
-        for(Session s : sessions) {
-            if(s.getID().equals(sessionID)) {
-                if(s.getPlayer1().equals(clientHandler)) {
+        for (Session s : sessions) {
+            if (s.getID().equals(sessionID)) {
+                if (s.getPlayer1().equals(clientHandler)) {
                     s.getPlayer2().getClientConnection().sendMessage(new Message("Pass"));
                 } else {
                     s.getPlayer1().getClientConnection().sendMessage(new Message("Pass"));
@@ -173,15 +179,15 @@ public class ServerMessageHandler {
     }
 
     private String handleSurrender(String sessionID) throws IOException {
-        for(Session s : sessions) {
-            if(s.getID().equals(sessionID)) {
-                if(s.getPlayer1().equals(clientHandler)) {
-                    s.getPlayer2().getClientConnection().sendMessage(new Message("Surrender;W"));   // W - win
+        for (Session s : sessions) {
+            if (s.getID().equals(sessionID)) {
+                if (s.getPlayer1().equals(clientHandler)) {
+                    s.getPlayer2().getClientConnection().sendMessage(new Message("Surrender;W")); // W - win
                 } else {
-                    s.getPlayer1().getClientConnection().sendMessage(new Message("Surrender;W"));   // W - win
+                    s.getPlayer1().getClientConnection().sendMessage(new Message("Surrender;W")); // W - win
                 }
             }
         }
-        return "Surrender;L";  // L - lose
+        return "Surrender;L"; // L - lose
     }
 }

@@ -19,7 +19,7 @@ public class Session {
     public Session(ClientHandler player1) {
         this.ID = generateID();
         this.player1 = player1;
-        this.moveAnalyzer = new MoveAnalyzer();
+        this.moveAnalyzer = new MoveAnalyzer(this);
     }
 
 
@@ -56,11 +56,18 @@ public class Session {
         return ableToJoin;
     }
 
-    public Message analyzeMove(Move move) {
+    public boolean analyzeMove(Move move) {
         return moveAnalyzer.analyzeMove(move);
     }
 
     public boolean hasPlayer(ClientHandler player) {
         return (player1 == player || player2 == player);
+    }
+
+    public ClientHandler getSecondPlayer(ClientHandler player) {
+        if (player1 == player) {
+            return player1;
+        }
+        return player2;
     }
 }

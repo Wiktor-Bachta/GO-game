@@ -1,29 +1,60 @@
 package tp.GameLogic;
 
 import tp.Game.Move;
+import tp.Game.Square;
+import tp.Game.SquareState;
 import tp.Message.Message;
+import tp.Server.Session;
 
 /**
- *  This class is responsible for analyzing moves and checking if they are valid.
- *  It will return board state after move.
+ * This class is responsible for analyzing moves and checking if they are valid.
+ * It will return board state after move.
  */
 public class MoveAnalyzer {
-    public MoveAnalyzer() {
+
+    private Session session;
+    private SquareState[][] board;
+    private SquareState currentSquareState;
+
+    public MoveAnalyzer(Session session) {
+        board = new SquareState[19][19];
+        for (int i = 0; i < 19; i++) {
+            for (int j = 0; j < 19; j++) {
+                board[i][j] = SquareState.EMPTY;
+            }
+        }
+        currentSquareState = SquareState.BLACK;
+        this.session = session;
     }
 
-    public Message analyzeMove(Move move) {
-        /**
-         * TODO: implement analyzeMove and then return actual board state
-         * for now we add +10 to move
-         */
+    public boolean analyzeMove(Move move) {
 
-        String this_move = move.getMove();
+        String thisMove = move.getMove();
 
-        String[] split_move = this_move.split(";");
+        String[] splitMove = thisMove.split(";");
 
-        String message ="Move;"+ String.valueOf(Integer.parseInt(split_move[0])+10)+";"+String.valueOf(Integer.parseInt(split_move[1])+10)+";";
-        
+        int x = Integer.parseInt(splitMove[0]);
+        int y = Integer.parseInt(splitMove[1]);
+        String message = "Move;Invalid";
+
+        if (board[x][y] == SquareState.EMPTY) {
+            message = "Move;Confirmed;" + x + ";" + y + ";";
+            // TODO: send move to database
+            board[x][y] = currentSquareState;
+            flipCurrentSqareState();
+            return true;
+        }
+
         System.out.println(message);
-        return new Message(message);
+        return false;
+    }
+
+    private void flipCurrentSqareState() {
+        if (currentSquareState == SquareState.BLACK) {
+            currentSquareState = SquareState.WHITE;
+        }
+        else {
+            currentSquareState = SquareState.WHITE;
+        }
     }
 }

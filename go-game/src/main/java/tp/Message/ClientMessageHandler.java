@@ -105,6 +105,8 @@ public class ClientMessageHandler {
                 client.getClientGUI().placeOpponentMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
                 client.setState(ClientState.DOING_MOVE);
                 break;
+            case "Invalid":
+                break;
         }
         //System.out.println("Get Move: " + msgArray[1] + ";" + msgArray[2]);
         //client.setState(ClientState.DOING_MOVE);
