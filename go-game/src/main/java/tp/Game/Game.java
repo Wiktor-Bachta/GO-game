@@ -19,7 +19,7 @@ public class Game {
 
     public Game(Client client) {
         this.client = client;
-        board = new Board(19, 19*40);
+        board = new Board(this, 19, 19*40);
     }
 
     public String getId() {
@@ -92,5 +92,11 @@ public class Game {
 
     public Board getBoard() {
         return board;
+    }
+
+    public void sendMessage(String string) {
+        if (client.getState() == ClientState.DOING_MOVE) {
+            client.getServerConnection().sendMessage(new Message("Move;" + string + ";" + ID + ";"));
+        }
     }
 }

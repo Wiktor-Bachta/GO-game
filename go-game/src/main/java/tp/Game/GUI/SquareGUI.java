@@ -19,12 +19,10 @@ public class SquareGUI extends Rectangle {
         setY(size * y);
         setCircle(x * size + size / 2, y * size + size / 2);
         setOnMouseClicked(event -> {
-            circle.setVisible(true);
-            circle.setFill(Color.BLACK);
+            sqaure.sendMessage();
         });
         setOnMouseEntered(event -> {
             setFill(Color.DARKGRAY);
-            square.sendMessage();
         });
 
         setOnMouseExited(event -> {
@@ -38,7 +36,6 @@ public class SquareGUI extends Rectangle {
 
     public void setCircle(int x, int y) {
         circle = new Circle(10);
-        circle.setFill(Color.TRANSPARENT);
         circle.setVisible(false);
         circle.setCenterX(x);
         circle.setCenterY(y);
@@ -46,5 +43,10 @@ public class SquareGUI extends Rectangle {
 
     public Circle getCircle() {
         return circle;
+    }
+
+    public void placeMove(Color colorBySquareState) {
+        circle.setFill(colorBySquareState);
+        circle.setVisible(true);
     }
 }

@@ -59,4 +59,8 @@ public class Session {
     public Message analyzeMove(Move move) {
         return moveAnalyzer.analyzeMove(move);
     }
+
+    public boolean hasPlayer(ClientHandler player) {
+        return (player1 == player || player2 == player);
+    }
 }

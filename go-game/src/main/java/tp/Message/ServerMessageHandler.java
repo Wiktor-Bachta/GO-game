@@ -142,10 +142,15 @@ public class ServerMessageHandler {
 
         for(Session s : sessions) {
             if(s.getID().equals(sessionID)) {
-                Message response = s.analyzeMove(move);
+                //Message response = s.analyzeMove(move);
+                Message response = new Message("Move;Confirmed;" + msgArray[1] + ";" + msgArray[2] + ";"); //just resend move for now
                 if(s.getPlayer1().equals(clientHandler)) {
+                    s.getPlayer1().getClientConnection().sendMessage(response);
+                    response = new Message("Move;New;" + msgArray[1] + ";" + msgArray[2] + ";");
                     s.getPlayer2().getClientConnection().sendMessage(response);
                 } else {
+                    s.getPlayer2().getClientConnection().sendMessage(response);
+                    response = new Message("Move;New;" + msgArray[1] + ";" + msgArray[2] + ";");
                     s.getPlayer1().getClientConnection().sendMessage(response);
                 }
             }

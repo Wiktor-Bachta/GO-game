@@ -39,4 +39,9 @@ public class Square {
     public void sendMessage() {
         board.sendMessage(x + ";" + y);
     }
+
+    public void placeMove(int x, int y, SquareState playerSquareState) {
+        this.squareState = playerSquareState;
+        squareGUI.placeMove(SquareState.getColorBySquareState(playerSquareState));
+    }
 }

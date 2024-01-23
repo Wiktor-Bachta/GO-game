@@ -95,11 +95,19 @@ public class ClientMessageHandler {
     }
 
     private void handleMove(String msgArray[]) {
-        /**
-         * TODO: refresh planszy z zauktualizowanym ruchem
-         */
-        System.out.println("Get Move: " + msgArray[1] + ";" + msgArray[2]);
-        client.setState(ClientState.DOING_MOVE);
+
+        switch (msgArray[1]) {
+            case "Confirmed":
+                client.getClientGUI().placePlayerMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
+                client.setState(ClientState.WAITING_FOR_MOVE);
+                break;
+            case "New": 
+                client.getClientGUI().placeOpponentMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
+                client.setState(ClientState.DOING_MOVE);
+                break;
+        }
+        //System.out.println("Get Move: " + msgArray[1] + ";" + msgArray[2]);
+        //client.setState(ClientState.DOING_MOVE);
 
     }
     private void handleDisconnect() {

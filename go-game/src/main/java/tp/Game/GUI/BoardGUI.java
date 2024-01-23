@@ -32,7 +32,7 @@ public class BoardGUI {
                 squares[i][j].setSquareGUI(new SquareGUI(i, j, squareSize, squares[i][j]));
                 squaresGUI[i][j] = squares[i][j].getSquareGUI();
                 pane.getChildren().add(squaresGUI[i][j]);
-                pane.getChildren().add(squaresGUI[i][j].getCircle());
+                //pane.getChildren().add(squaresGUI[i][j].getCircle());
             }
         }
         verticalLines = new Line[size];
@@ -41,6 +41,11 @@ public class BoardGUI {
             verticalLines[i] = new Line((i + 1/2f) * squareSize, squareSize / 2, (i + 1/2f) * squareSize, pixelSize - squareSize / 2);
             horizontaLines[i] = new Line(squareSize / 2, (i + 1/2f) * squareSize, pixelSize - squareSize / 2, (i + 1/2f) * squareSize);
             pane.getChildren().addAll(verticalLines[i], horizontaLines[i]);
+        }
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                pane.getChildren().add(squares[i][j].getSquareGUI().getCircle());
+            }
         }
     }
 

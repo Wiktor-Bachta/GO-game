@@ -22,6 +22,7 @@ public class MoveAnalyzer {
         String[] split_move = this_move.split(";");
 
         String message ="Move;"+ String.valueOf(Integer.parseInt(split_move[0])+10)+";"+String.valueOf(Integer.parseInt(split_move[1])+10)+";";
+        
         System.out.println(message);
         return new Message(message);
     }

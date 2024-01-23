@@ -8,7 +8,8 @@ public class Board {
     Square[][] squares;
     int size;
 
-    public Board(int size, int pixelSize) {
+    public Board(Game game, int size, int pixelSize) {
+        this.game = game;
         this.size = size;
         squares = new Square[size][size];
         for (int i = 0; i < size; i++) {
@@ -32,6 +33,6 @@ public class Board {
     }
 
     public void sendMessage(String string) {
-        //;
+        game.sendMessage(string);
     }
 }

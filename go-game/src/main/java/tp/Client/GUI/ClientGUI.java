@@ -54,10 +54,18 @@ public class ClientGUI extends Application {
     public void displayBoard() {
         Platform.runLater(() -> {
             choiceGUI.terminateChoiceGUI();
-            game = new Game(client);
+            game = client.getGame();
             boardGUI = game.getBoard().getBoardGUI();
             stage.setScene(new Scene(boardGUI.getPane(), 800, 800));
         });
 
+    }
+
+    public void placePlayerMove(int x, int y) {
+        game.getBoard().getSquares()[x][y].placeMove(x, y, ClientColor.getPlayerSquareState(clientColor));
+    }
+
+    public void placeOpponentMove(int x, int y) {
+        game.getBoard().getSquares()[x][y].placeMove(x, y, ClientColor.getOpponentSquareState(clientColor));
     }
 }
