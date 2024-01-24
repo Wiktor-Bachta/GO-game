@@ -100,10 +100,12 @@ public class ClientMessageHandler {
             case "Confirmed":
                 client.getClientGUI().placePlayerMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
                 client.setState(ClientState.WAITING_FOR_MOVE);
+                client.getClientGUI().getSidePanelGUI().labelUpdateWait();
                 break;
             case "New": 
                 client.getClientGUI().placeOpponentMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
                 client.setState(ClientState.DOING_MOVE);
+                client.getClientGUI().getSidePanelGUI().labelUpdateMove();
                 break;
             case "Remove":
                 client.getClientGUI().clearMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));

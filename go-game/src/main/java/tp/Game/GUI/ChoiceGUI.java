@@ -16,7 +16,7 @@ import tp.Message.Message;
 public class ChoiceGUI extends VBox {
     private String msg;
     private Client client;
-    Label idLabel;
+    private Label idLabel;
     private Stage popupStage;
 
     public ChoiceGUI(Client client) {

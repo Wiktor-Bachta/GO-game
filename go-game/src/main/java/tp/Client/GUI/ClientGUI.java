@@ -3,6 +3,7 @@ package tp.Client.GUI;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tp.Client.Client;
 import tp.Game.Game;
@@ -14,6 +15,7 @@ public class ClientGUI extends Application {
     private Client client;
     private ChoiceGUI choiceGUI;
     private BoardGUI boardGUI;
+    private SidePanelGUI sidePanelGUI;
     private ClientColor clientColor;
     private Game game;
 
@@ -46,7 +48,6 @@ public class ClientGUI extends Application {
         this.clientColor = color;
     }
 
-
     public void setBoardGUI(BoardGUI boardGUI) {
         this.boardGUI = boardGUI;
     }
@@ -56,7 +57,16 @@ public class ClientGUI extends Application {
             choiceGUI.terminateChoiceGUI();
             game = client.getGame();
             boardGUI = game.getBoard().getBoardGUI();
-            stage.setScene(new Scene(boardGUI.getPane(), 800, 800));
+            sidePanelGUI = new SidePanelGUI(client);
+            BorderPane layout = new BorderPane();
+            layout.setCenter(boardGUI.getPane());
+            layout.setRight(sidePanelGUI);
+            if (clientColor == ClientColor.BLACK) {
+                sidePanelGUI.labelUpdateMove();
+            } else {
+                sidePanelGUI.labelUpdateWait();
+            }
+            stage.setScene(new Scene(layout, 960, 760));
         });
 
     }
@@ -71,5 +81,13 @@ public class ClientGUI extends Application {
 
     public void clearMove(int x, int y) {
         game.getBoard().getSquares()[x][y].clearMove(x, y);
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public SidePanelGUI getSidePanelGUI() {
+        return sidePanelGUI;
     }
 }
