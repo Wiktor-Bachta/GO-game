@@ -68,4 +68,8 @@ public class ClientGUI extends Application {
     public void placeOpponentMove(int x, int y) {
         game.getBoard().getSquares()[x][y].placeMove(x, y, ClientColor.getOpponentSquareState(clientColor));
     }
+
+    public void clearMove(int x, int y) {
+        game.getBoard().getSquares()[x][y].clearMove(x, y);
+    }
 }

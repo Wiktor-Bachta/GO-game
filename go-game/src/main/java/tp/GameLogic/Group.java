@@ -13,6 +13,11 @@ public class Group {
         this.state = state;
     }
 
+    public Group(SquareState state, Stone stone) {
+        this.state = state;
+        stones.add(stone);
+    }
+
     public Set<Stone> getStones() {
         return stones;
     }
@@ -29,5 +34,10 @@ public class Group {
         this.state = state;
     }
 
-    // Other methods as needed
+    public void mergeWith(Group group) {
+        for (Stone stone : group.getStones()) {
+            stones.add(stone);
+            stone.setGroup(this);
+        }
+    }
 }

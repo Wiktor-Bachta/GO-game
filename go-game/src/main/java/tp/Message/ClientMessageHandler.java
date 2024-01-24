@@ -105,6 +105,9 @@ public class ClientMessageHandler {
                 client.getClientGUI().placeOpponentMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
                 client.setState(ClientState.DOING_MOVE);
                 break;
+            case "Remove":
+                client.getClientGUI().clearMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
+                break;
             case "Invalid":
                 break;
         }

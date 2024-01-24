@@ -44,4 +44,9 @@ public class Square {
         this.squareState = playerSquareState;
         squareGUI.placeMove(SquareState.getColorBySquareState(playerSquareState));
     }
+
+    public void clearMove(int x, int y) {
+        this.squareState = SquareState.EMPTY;
+        squareGUI.clearMove();
+    }
 }

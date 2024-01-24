@@ -49,4 +49,8 @@ public class SquareGUI extends Rectangle {
         circle.setFill(colorBySquareState);
         circle.setVisible(true);
     }
+
+    public void clearMove() {
+        circle.setVisible(false);
+    }
 }
