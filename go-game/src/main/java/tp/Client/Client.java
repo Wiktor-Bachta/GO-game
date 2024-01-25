@@ -94,14 +94,15 @@ public class Client {
         return game;
     }
 
-    public void displayBoard() {
-        /**
-         * TODO: display the board
-         * tutaj trzeba wysiwetlic plansze ( nie wiem czy nie jako nowy watek)
-         * klikniecie spowoduje zwrocenie ruchu w postaci message w postci Move;X;Y;ID
-         * (ID to id gry)
-         *
-         */
+    public void nextState() {
+        if (state == ClientState.WAITING_FOR_MOVE) {
+            state = ClientState.DOING_MOVE;
+            getClientGUI().getSidePanelGUI().labelUpdateMove();
+        }
+        else {
+            state = ClientState.WAITING_FOR_MOVE;
+            getClientGUI().getSidePanelGUI().labelUpdateWait();
+        }
     }
 
     public void displayError(String error) {

@@ -90,4 +90,12 @@ public class ClientGUI extends Application {
     public SidePanelGUI getSidePanelGUI() {
         return sidePanelGUI;
     }
+
+    public void senOpponentChat(String string) {
+        sidePanelGUI.getChatBox().addOpponentMessage(string);
+    }
+
+    public void sendPlayerChat(String string) {
+        sidePanelGUI.getChatBox().addPlayerMessage(string);
+    }
 }

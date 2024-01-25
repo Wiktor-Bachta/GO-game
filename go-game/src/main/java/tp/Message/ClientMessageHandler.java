@@ -39,7 +39,7 @@ public class ClientMessageHandler {
                 handleSurrender(msgArray[1]);
                 break;
             case "Chat":
-                System.out.println("Chat");
+                handleChat(msgArray);
                 break;
             case "Error":
                 handleError();
@@ -53,6 +53,18 @@ public class ClientMessageHandler {
                 break;
         }
 
+    }
+
+    private void handleChat(String[] msgArray) {
+        switch (msgArray[1]) {
+            case "Player":
+                client.getClientGUI().sendPlayerChat(msgArray[2]);
+                break;
+        
+            case "Opponent":
+                client.getClientGUI().senOpponentChat(msgArray[2]);
+                break;
+        }
     }
 
     private void handleLaunch(String msgArray[]) throws IOException {
@@ -70,7 +82,6 @@ public class ClientMessageHandler {
                     client.getClientGUI().setClientColor(ClientColor.WHITE);
                     client.getClientGUI().displayBoard();
                 }
-                client.displayBoard();
                 break;
             case "Error":
                 client.displayError(msgArray[2]);
@@ -133,10 +144,10 @@ public class ClientMessageHandler {
 
     private void handlePass() {
         /**
-         * User passed
+         * Opponent passed
          */
-        System.out.println("User passed");
-        client.setState(ClientState.DOING_MOVE);
+        client.getClientGUI().getSidePanelGUI().updateSpecialInfo("Opponent passed");
+        client.nextState();
     }
 
     private void handleSurrender(String result) {

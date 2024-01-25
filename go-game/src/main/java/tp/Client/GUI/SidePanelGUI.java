@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import tp.Client.Client;
+import tp.Client.ClientState;
 import tp.Message.Message;
 
 public class SidePanelGUI extends VBox {
@@ -16,11 +17,12 @@ public class SidePanelGUI extends VBox {
     private Label specialInfo;
     private Button passButton;
     private Button resignButton;
+    private ChatBox chatBox;
 
     public SidePanelGUI(Client client) {
         this.client = client;
 
-        setWidth(200);
+        setAlignment(getAlignment());
         setSpacing(5);
         setPadding(new Insets(10, 10, 10, 10));
 
@@ -29,10 +31,15 @@ public class SidePanelGUI extends VBox {
         specialInfo = new Label();
         passButton = new Button("Pass");
         resignButton = new Button("Resign");
-        getChildren().addAll(turnInfo, passButton, resignButton, specialInfo);
+        chatBox = new ChatBox(client);
+
+        getChildren().addAll(turnInfo, passButton, resignButton, specialInfo, chatBox);
 
         passButton.setOnAction(e -> {
-            client.getServerConnection().sendMessage(new Message("Pass;" + client.getClientGUI().getGame().getId()));
+            if (client.getState() == ClientState.DOING_MOVE) {
+                client.getServerConnection().sendMessage(new Message("Pass;" + client.getClientGUI().getGame().getId()));
+                client.nextState();
+            }
         });
 
         resignButton.setOnAction(e -> {
@@ -52,5 +59,15 @@ public class SidePanelGUI extends VBox {
         Platform.runLater(() -> {
             turnInfo.setText("Ruch przeciwnika");
         });
+    }
+
+    public void updateSpecialInfo(String message) {
+        Platform.runLater(() -> {
+            specialInfo.setText(message);
+        });
+    }
+
+    public ChatBox getChatBox() {
+        return chatBox;
     }
 }

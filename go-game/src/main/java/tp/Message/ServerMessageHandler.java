@@ -44,7 +44,7 @@ public class ServerMessageHandler {
                 response = handleSurrender(msgArray[1]);
                 break;
             case "Chat":
-                System.out.println("Chat");
+                response = handleChat(msgArray[1], msgArray[2]);
                 break;
             case "Error":
                 System.out.println("Error");
@@ -168,10 +168,31 @@ public class ServerMessageHandler {
     private String handlePass(String sessionID) throws IOException {
         for (Session s : sessions) {
             if (s.getID().equals(sessionID)) {
+                if (s.getPassEndsGame() == true) {
+                    // game ends here
+                    // count points and give opportunity to resume game
+                }
+                s.setPassEndsGame(true);
                 if (s.getPlayer1().equals(clientHandler)) {
                     s.getPlayer2().getClientConnection().sendMessage(new Message("Pass"));
                 } else {
                     s.getPlayer1().getClientConnection().sendMessage(new Message("Pass"));
+                }
+            }
+        }
+        return "Wait";
+    }
+
+    private String handleChat(String sessionID, String message) throws IOException {
+        for (Session s : sessions) {
+            if (s.getID().equals(sessionID)) {
+                if (s.getPlayer1().equals(clientHandler)) {
+                    s.getPlayer1().getClientConnection().sendMessage(new Message("Chat;Player;" + message));
+                    s.getPlayer2().getClientConnection().sendMessage(new Message("Chat;Opponent;" + message));
+                }
+                else {
+                    s.getPlayer2().getClientConnection().sendMessage(new Message("Chat;Player;" + message));
+                    s.getPlayer1().getClientConnection().sendMessage(new Message("Chat;Opponent;" + message));
                 }
             }
         }

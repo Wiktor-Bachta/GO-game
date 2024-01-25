@@ -23,6 +23,7 @@ public class MoveAnalyzer {
     private SquareState currentSquareState;
     private int killedLastMove = 0;
     private Stone stoneKilledLastMove;
+    private boolean passEndsGame = false;
 
     public MoveAnalyzer(Session session) {
         board = new Stone[19][19];
@@ -74,6 +75,7 @@ public class MoveAnalyzer {
             }
 
             currentSquareState = getOppositeSquareState(currentSquareState);
+            passEndsGame = false;
             return true;
         }
 
@@ -169,7 +171,8 @@ public class MoveAnalyzer {
     }
 
     public void killGroup(Group group) {
-        for (Stone stone : group.getStones()) {
+        List<Stone> stonesCopy = new ArrayList<>(group.getStones());
+        for (Stone stone : stonesCopy) {
             stone.reset();
             stoneKilledLastMove = stone;
             try {
@@ -181,5 +184,13 @@ public class MoveAnalyzer {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setPassEndsGame(boolean val) {
+        this.passEndsGame = val;
+    }
+
+    public boolean getPassEndsGame() {
+        return passEndsGame;
     }
 }

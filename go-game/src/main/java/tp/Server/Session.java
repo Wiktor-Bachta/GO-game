@@ -70,4 +70,12 @@ public class Session {
         }
         return player2;
     }
+
+    public void setPassEndsGame(boolean val) {
+        moveAnalyzer.setPassEndsGame(val);
+    }
+
+    public boolean getPassEndsGame() {
+        return moveAnalyzer.getPassEndsGame();
+    }
 }
