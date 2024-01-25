@@ -9,9 +9,10 @@ import tp.Database.dto.MoveType;
 
 public class DatabaseFacade {
 
-    public static void addMoveToDatabase(String gameID, int moveNumber, int x, int y) {
+    private EntityManagerFactory emf;
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+    public void addMoveToDatabase(String gameID, int moveNumber, int x, int y) {
+
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
@@ -21,12 +22,9 @@ public class DatabaseFacade {
         em.getTransaction().commit();
 
         em.close();
-        emf.close();
-
     }
 
-    public static void addMoveToDatabase(String gameID, int moveNumber) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+    public void addMoveToDatabase(String gameID, int moveNumber) {
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
@@ -35,6 +33,13 @@ public class DatabaseFacade {
         em.getTransaction().commit();
 
         em.close();
+    }
+
+    public void open() {
+        emf = Persistence.createEntityManagerFactory("default");
+    }
+
+    public void close() {
         emf.close();
     }
 }

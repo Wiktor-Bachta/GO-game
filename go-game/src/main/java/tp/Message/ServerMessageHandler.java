@@ -79,6 +79,7 @@ public class ServerMessageHandler {
                             sendToPlayer("EndGame;L;" + playerPoints + ";" + opponentPoints);
                             sendToOpponent(msgArray[1], "EndGame;W;" + opponentPoints + ";" + playerPoints);
                         }
+                        s.getDatabaseFacade().close();
                     } else {
                         s.setOnePlayerAgreedToEnd(true);
                     }
@@ -136,6 +137,7 @@ public class ServerMessageHandler {
                                                              // opponent type for create msg
                         if (s.isAbleToJoin()) {
                             s.addPlayer2(clientHandler);
+                            s.getDatabaseFacade().open();
 
                             // randomize who goes first - black always goes first
                             double random = Math.random();
@@ -184,7 +186,7 @@ public class ServerMessageHandler {
             if (s.getID().equals(sessionID)) {
                 boolean valid = s.analyzeMove(move);
                 if (valid) {
-                    DatabaseFacade.addMoveToDatabase(sessionID, s.getAndUpdateMoveCount(), Integer.parseInt(x),
+                    s.getDatabaseFacade().addMoveToDatabase(sessionID, s.getAndUpdateMoveCount(), Integer.parseInt(x),
                             Integer.parseInt(y));
                     if (s.getPlayer1().equals(clientHandler)) {
                         Message response = new Message("Move;Confirmed;" + msgArray[1] + ";" + msgArray[2] + ";");
@@ -212,7 +214,7 @@ public class ServerMessageHandler {
         try {
             s = getSession(sessionID);
             s.skipTurn();
-            DatabaseFacade.addMoveToDatabase(sessionID, s.getAndUpdateMoveCount());
+            s.getDatabaseFacade().addMoveToDatabase(sessionID, s.getAndUpdateMoveCount());
             if (s.getPassEndsGame() == true) {
                 sendToBothPlayers(sessionID, "Pass;End");
                 s.setPassEndsGame(false);

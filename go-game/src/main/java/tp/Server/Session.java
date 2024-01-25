@@ -1,6 +1,7 @@
 package tp.Server;
 
 import tp.Client.Client;
+import tp.Database.DatabaseFacade;
 import tp.Game.Move;
 import tp.Game.SquareState;
 import tp.GameLogic.MoveAnalyzer;
@@ -13,6 +14,7 @@ public class Session {
     private ClientHandler player1;
     private ClientHandler player2;
     private ClientHandler firstPlayer;
+    private DatabaseFacade databaseFacade;
     private int moveCount = 0;
 
     private MoveAnalyzer moveAnalyzer;
@@ -23,6 +25,7 @@ public class Session {
         this.ID = generateID();
         this.player1 = player1;
         this.moveAnalyzer = new MoveAnalyzer(this);
+        databaseFacade = new DatabaseFacade();
     }
 
     public void setFirstPlayer(ClientHandler player) {
@@ -109,4 +112,9 @@ public class Session {
         moveCount++;
         return moveCount;
     }
+
+    public DatabaseFacade getDatabaseFacade() {
+        return databaseFacade;
+    }
+
 }
