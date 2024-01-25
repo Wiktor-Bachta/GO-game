@@ -1,5 +1,6 @@
 package tp.Message;
 
+import tp.Database.DatabaseFacade;
 import tp.Game.Move;
 import tp.Game.SquareState;
 import tp.Server.ClientHandler;
@@ -183,6 +184,8 @@ public class ServerMessageHandler {
             if (s.getID().equals(sessionID)) {
                 boolean valid = s.analyzeMove(move);
                 if (valid) {
+                    DatabaseFacade.addMoveToDatabase(sessionID, s.getAndUpdateMoveCount(), Integer.parseInt(x),
+                            Integer.parseInt(y));
                     if (s.getPlayer1().equals(clientHandler)) {
                         Message response = new Message("Move;Confirmed;" + msgArray[1] + ";" + msgArray[2] + ";");
                         s.getPlayer1().getClientConnection().sendMessage(response);
@@ -209,6 +212,7 @@ public class ServerMessageHandler {
         try {
             s = getSession(sessionID);
             s.skipTurn();
+            DatabaseFacade.addMoveToDatabase(sessionID, s.getAndUpdateMoveCount());
             if (s.getPassEndsGame() == true) {
                 sendToBothPlayers(sessionID, "Pass;End");
                 s.setPassEndsGame(false);

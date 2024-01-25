@@ -13,6 +13,7 @@ public class Session {
     private ClientHandler player1;
     private ClientHandler player2;
     private ClientHandler firstPlayer;
+    private int moveCount = 0;
 
     private MoveAnalyzer moveAnalyzer;
 
@@ -104,4 +105,8 @@ public class Session {
         moveAnalyzer.skipTurn();
     }
 
+    public int getAndUpdateMoveCount() {
+        moveCount++;
+        return moveCount;
+    }
 }
