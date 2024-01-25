@@ -2,6 +2,7 @@ package tp.Server;
 
 import tp.Client.Client;
 import tp.Game.Move;
+import tp.Game.SquareState;
 import tp.GameLogic.MoveAnalyzer;
 import tp.Message.Message;
 
@@ -11,6 +12,7 @@ public class Session {
     private String ID;
     private ClientHandler player1;
     private ClientHandler player2;
+    private ClientHandler firstPlayer;
 
     private MoveAnalyzer moveAnalyzer;
 
@@ -22,6 +24,9 @@ public class Session {
         this.moveAnalyzer = new MoveAnalyzer(this);
     }
 
+    public void setFirstPlayer(ClientHandler player) {
+        firstPlayer = player;
+    }
 
     private String generateID() {
         UUID uuid = UUID.randomUUID();
@@ -86,4 +91,17 @@ public class Session {
     public void setOnePlayerAgreedToEnd(boolean val) {
         moveAnalyzer.setOnePlayerAgreedToEnd(val);
     }
+
+    public int getPoints(SquareState state) {
+        return moveAnalyzer.calculatePoints(state);
+    }
+
+    public boolean isFirstPlayer(ClientHandler player) {
+        return player == firstPlayer;
+    }
+
+    public void skipTurn() {
+        moveAnalyzer.skipTurn();
+    }
+
 }

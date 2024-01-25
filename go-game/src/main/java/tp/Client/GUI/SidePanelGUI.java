@@ -40,14 +40,17 @@ public class SidePanelGUI extends VBox {
 
         passButton.setOnAction(e -> {
             if (client.getState() == ClientState.DOING_MOVE) {
-                client.getServerConnection().sendMessage(new Message("Pass;" + client.getClientGUI().getGame().getId()));
+                client.getServerConnection()
+                        .sendMessage(new Message("Pass;" + client.getClientGUI().getGame().getId()));
                 client.nextState();
             }
         });
 
         resignButton.setOnAction(e -> {
+            if (client.getState() == ClientState.DOING_MOVE) {
             client.getServerConnection()
                     .sendMessage(new Message("Surrender;" + client.getClientGUI().getGame().getId()));
+            }
         });
 
     }

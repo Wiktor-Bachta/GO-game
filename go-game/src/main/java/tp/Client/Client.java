@@ -96,6 +96,10 @@ public class Client {
         return game;
     }
 
+    public void newGame() {
+        game = new Game(this);
+    }
+
     public void nextState() {
         if (state == ClientState.WAITING_FOR_MOVE) {
             setMove();

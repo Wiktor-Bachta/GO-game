@@ -19,8 +19,10 @@ public class ClientGUI extends Application {
     private ChoiceGUI choiceGUI;
     private BoardGUI boardGUI;
     private SidePanelGUI sidePanelGUI;
+    private EndGamePanelGUI endGamePanelGUI;
     private ClientColor clientColor;
     private Game game;
+    private BorderPane layout;
 
     private Stage stage;
 
@@ -33,6 +35,14 @@ public class ClientGUI extends Application {
         Scene scene = new Scene(choiceGUI, 300, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public void reset() {
+        client.newGame();
+        choiceGUI = new ChoiceGUI(client);
+        Scene scene = new Scene(choiceGUI, 300, 200);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void run() {
@@ -61,7 +71,7 @@ public class ClientGUI extends Application {
             game = client.getGame();
             boardGUI = game.getBoard().getBoardGUI();
             sidePanelGUI = new SidePanelGUI(client);
-            BorderPane layout = new BorderPane();
+            layout = new BorderPane();
             layout.setCenter(boardGUI.getPane());
             layout.setRight(sidePanelGUI);
             if (clientColor == ClientColor.BLACK) {
@@ -104,5 +114,12 @@ public class ClientGUI extends Application {
 
     public void showEndGameProposition(int playerPoints, int opponentPoints) {
         sidePanelGUI.showEndGameProposition(playerPoints, opponentPoints);
+    }
+
+    public void endGame(String result, int playerPoints, int opponentPoints) {
+        Platform.runLater(() -> {
+            endGamePanelGUI = new EndGamePanelGUI(client, result, playerPoints, opponentPoints);
+            layout.setRight(endGamePanelGUI);
+        });
     }
 }

@@ -48,6 +48,7 @@ public class ChoiceGUI extends VBox {
         exitButton.setOnAction(e -> {
             msg = "Disconnect";
             client.getServerConnection().sendMessage(new Message(msg));
+            System.exit(0);
         });
 
         createGameButton.setOnAction(e -> {

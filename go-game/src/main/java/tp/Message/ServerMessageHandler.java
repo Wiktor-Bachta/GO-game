@@ -1,6 +1,7 @@
 package tp.Message;
 
 import tp.Game.Move;
+import tp.Game.SquareState;
 import tp.Server.ClientHandler;
 import tp.Server.Session;
 
@@ -66,8 +67,17 @@ public class ServerMessageHandler {
             switch (msgArray[2]) {
                 case "Accepted":
                     if (s.getOnePlayerAgreedToEnd() == true) {
-                        sendToBothPlayers(msgArray[1], "EndGame");
-                        // send win and lose based on point amount
+                        int playerPoints = getPlayerPoints(s);
+                        int opponentPoints = getOpponentPoints(s);
+                        if (playerPoints > opponentPoints) {
+                            sendToPlayer("EndGame;W;" + playerPoints + ";" + opponentPoints);
+                            sendToOpponent(msgArray[1], "EndGame;L;" + opponentPoints + ";" + playerPoints);
+                        } else if (playerPoints == opponentPoints) {
+                            sendToBothPlayers(msgArray[1], "EndGame;D;" + playerPoints + ";" + playerPoints);
+                        } else {
+                            sendToPlayer("EndGame;L;" + playerPoints + ";" + opponentPoints);
+                            sendToOpponent(msgArray[1], "EndGame;W;" + opponentPoints + ";" + playerPoints);
+                        }
                     } else {
                         s.setOnePlayerAgreedToEnd(true);
                     }
@@ -132,10 +142,12 @@ public class ServerMessageHandler {
                             if (random < 0.5) {
                                 response = "Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait";
                                 s.getPlayer1().getClientConnection().sendMessage(new Message(response));
+                                s.setFirstPlayer(s.getPlayer2());
                                 response = "Launch;" + "Start;" + sessionIDToJoin + ";" + "Move";
                             } else {
                                 response = "Launch;" + "Start;" + sessionIDToJoin + ";" + "Move";
                                 s.getPlayer1().getClientConnection().sendMessage(new Message(response));
+                                s.setFirstPlayer(s.getPlayer1());
                                 response = "Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait";
                             }
 
@@ -196,8 +208,10 @@ public class ServerMessageHandler {
         Session s;
         try {
             s = getSession(sessionID);
+            s.skipTurn();
             if (s.getPassEndsGame() == true) {
                 sendToBothPlayers(sessionID, "Pass;End");
+                s.setPassEndsGame(false);
             } else {
                 s.setPassEndsGame(true);
                 sendToOpponent(sessionID, "Pass;Regular");
@@ -214,19 +228,17 @@ public class ServerMessageHandler {
     }
 
     private String handleSurrender(String sessionID) {
-        for (Session s : sessions) {
-            if (s.getID().equals(sessionID)) {
-                try {
-                    if (s.getPlayer1().equals(clientHandler)) {
-                        s.getPlayer2().getClientConnection().sendMessage(new Message("Surrender;W")); // W - win
-                    } else {
-                        s.getPlayer1().getClientConnection().sendMessage(new Message("Surrender;W")); // W - win
-                    }
-                } catch (IOException e) {
-                }
-            }
+        Session s;
+        try {
+            s = getSession(sessionID);
+            int playerPoints = getPlayerPoints(s);
+            int opponentPoints = getOpponentPoints(s);
+            sendToPlayer("EndGame;SL;" + playerPoints + ";" + opponentPoints);
+            sendToOpponent(sessionID, "EndGame;SW;" + opponentPoints + ";" + playerPoints);
+        } catch (Exception e) {
+
         }
-        return "Surrender;L"; // L - lose
+        return "Wait"; // L - lose
     }
 
     private void sendToPlayer(String message) {
@@ -263,5 +275,19 @@ public class ServerMessageHandler {
             }
         }
         throw new Exception();
+    }
+
+    private int getPlayerPoints(Session s) {
+        if (s.isFirstPlayer(clientHandler)) {
+            return s.getPoints(SquareState.BLACK);
+        }
+        return s.getPoints(SquareState.WHITE);
+    }
+
+    private int getOpponentPoints(Session s) {
+        if (s.isFirstPlayer(clientHandler)) {
+            return s.getPoints(SquareState.WHITE);
+        }
+        return s.getPoints(SquareState.BLACK);
     }
 }

@@ -36,9 +36,6 @@ public class ClientMessageHandler {
             case "Pass":
                 handlePass(msgArray);
                 break;
-            case "Surrender":
-                handleSurrender(msgArray[1]);
-                break;
             case "Chat":
                 handleChat(msgArray);
                 break;
@@ -51,12 +48,37 @@ public class ClientMessageHandler {
             case "EndDecision":
                 handleEndDecision(msgArray);
                 break;
+            case "EndGame":
+                handleEndGame(msgArray);
+                break;
             default:
                 System.out.println(msg);
                 System.out.println("Unknown message type");
                 break;
         }
 
+    }
+
+    private void handleEndGame(String[] msgArray) {
+        String result = "";
+        switch (msgArray[1]) {
+            case "W":
+                result = "You Won!";
+                break;
+            case "L":
+                result = "You lost.";
+                break;
+            case "D":
+                result = "It's a draw.";
+                break;
+            case "SW":
+                result = "Win by opponent surrender.";
+                break;
+            case "SL":
+                result = "Loss by surrender.";
+                break;
+        }
+        client.getClientGUI().endGame(result, Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
     }
 
     private void handleEndDecision(String[] msgArray) {
@@ -177,21 +199,6 @@ public class ClientMessageHandler {
                 break;
         }
 
-    }
-
-    private void handleSurrender(String result) {
-        /**
-         * User surrendered
-         */
-        if (result.equals("L"))
-            System.out.println("You surrendered. You lost!");
-        else if (result.equals("W"))
-            System.out.println("User surrendered. You won!");
-        client.getGame().stopGame();
-        /**
-         * TODO: tu trzeba stworzyc gui z informacja o wygranej i moze propozycja
-         * rewanzu albo wyjscie z gry
-         */
     }
 
     private void handleError() {

@@ -202,4 +202,13 @@ public class MoveAnalyzer {
     public void setOnePlayerAgreedToEnd(boolean val) {
         onePlayerAgreedToEnd = val;
     }
+
+    public int calculatePoints(SquareState state) {
+        //TO DO: IMPLEMENT
+        return 0;
+    }
+
+    public void skipTurn() {
+        currentSquareState = getOppositeSquareState(currentSquareState);
+    }
 }
