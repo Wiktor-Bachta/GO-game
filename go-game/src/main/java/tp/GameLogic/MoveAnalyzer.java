@@ -24,6 +24,7 @@ public class MoveAnalyzer {
     private int killedLastMove = 0;
     private Stone stoneKilledLastMove;
     private boolean passEndsGame = false;
+    private boolean onePlayerAgreedToEnd = false;
 
     public MoveAnalyzer(Session session) {
         board = new Stone[19][19];
@@ -192,5 +193,13 @@ public class MoveAnalyzer {
 
     public boolean getPassEndsGame() {
         return passEndsGame;
+    }
+
+    public boolean getOnePlayerAgreedToEnd() {
+        return onePlayerAgreedToEnd;
+    }
+
+    public void setOnePlayerAgreedToEnd(boolean val) {
+        onePlayerAgreedToEnd = val;
     }
 }

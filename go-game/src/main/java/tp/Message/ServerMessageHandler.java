@@ -49,11 +49,38 @@ public class ServerMessageHandler {
             case "Error":
                 System.out.println("Error");
                 break;
+            case "EndDecision":
+                handleEndDecision(msgArray);
+                break;
             default:
                 System.out.println("Unknown message type");
                 break;
         }
         return new Message(response);
+    }
+
+    private void handleEndDecision(String[] msgArray) {
+        Session s;
+        try {
+            s = getSession(msgArray[1]);
+            switch (msgArray[2]) {
+                case "Accepted":
+                    if (s.getOnePlayerAgreedToEnd() == true) {
+                        sendToBothPlayers(msgArray[1], "EndGame");
+                        // send win and lose based on point amount
+                    } else {
+                        s.setOnePlayerAgreedToEnd(true);
+                    }
+                    break;
+                case "Declined":
+                    s.setOnePlayerAgreedToEnd(false);
+                    sendToPlayer("EndDecision;Declined;Wait");
+                    sendToOpponent(msgArray[1], "EndDecision;Declined;Move");
+                    break;
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     private String handleLaunch(String gameType, String opponent) throws IOException {
@@ -166,49 +193,75 @@ public class ServerMessageHandler {
     }
 
     private String handlePass(String sessionID) throws IOException {
-        for (Session s : sessions) {
-            if (s.getID().equals(sessionID)) {
-                if (s.getPassEndsGame() == true) {
-                    // game ends here
-                    // count points and give opportunity to resume game
-                }
+        Session s;
+        try {
+            s = getSession(sessionID);
+            if (s.getPassEndsGame() == true) {
+                sendToBothPlayers(sessionID, "Pass;End");
+            } else {
                 s.setPassEndsGame(true);
-                if (s.getPlayer1().equals(clientHandler)) {
-                    s.getPlayer2().getClientConnection().sendMessage(new Message("Pass"));
-                } else {
-                    s.getPlayer1().getClientConnection().sendMessage(new Message("Pass"));
-                }
+                sendToOpponent(sessionID, "Pass;Regular");
             }
+        } catch (Exception e) {
         }
         return "Wait";
     }
 
     private String handleChat(String sessionID, String message) throws IOException {
-        for (Session s : sessions) {
-            if (s.getID().equals(sessionID)) {
-                if (s.getPlayer1().equals(clientHandler)) {
-                    s.getPlayer1().getClientConnection().sendMessage(new Message("Chat;Player;" + message));
-                    s.getPlayer2().getClientConnection().sendMessage(new Message("Chat;Opponent;" + message));
-                }
-                else {
-                    s.getPlayer2().getClientConnection().sendMessage(new Message("Chat;Player;" + message));
-                    s.getPlayer1().getClientConnection().sendMessage(new Message("Chat;Opponent;" + message));
-                }
-            }
-        }
+        sendToPlayer("Chat;Player;" + message);
+        sendToOpponent(sessionID, "Chat;Opponent;" + message);
         return "Wait";
     }
 
-    private String handleSurrender(String sessionID) throws IOException {
+    private String handleSurrender(String sessionID) {
         for (Session s : sessions) {
             if (s.getID().equals(sessionID)) {
-                if (s.getPlayer1().equals(clientHandler)) {
-                    s.getPlayer2().getClientConnection().sendMessage(new Message("Surrender;W")); // W - win
-                } else {
-                    s.getPlayer1().getClientConnection().sendMessage(new Message("Surrender;W")); // W - win
+                try {
+                    if (s.getPlayer1().equals(clientHandler)) {
+                        s.getPlayer2().getClientConnection().sendMessage(new Message("Surrender;W")); // W - win
+                    } else {
+                        s.getPlayer1().getClientConnection().sendMessage(new Message("Surrender;W")); // W - win
+                    }
+                } catch (IOException e) {
                 }
             }
         }
         return "Surrender;L"; // L - lose
+    }
+
+    private void sendToPlayer(String message) {
+        try {
+            clientHandler.getClientConnection().sendMessage(new Message(message));
+        } catch (IOException e) {
+        }
+    }
+
+    private void sendToOpponent(String sessionID, String message) {
+        for (Session s : sessions) {
+            if (s.getID().equals(sessionID)) {
+                try {
+                    if (s.getPlayer1().equals(clientHandler)) {
+                        s.getPlayer2().getClientConnection().sendMessage(new Message(message));
+                    } else {
+                        s.getPlayer1().getClientConnection().sendMessage(new Message(message));
+                    }
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+
+    private void sendToBothPlayers(String sessionID, String message) {
+        sendToPlayer(message);
+        sendToOpponent(sessionID, message);
+    }
+
+    private Session getSession(String sessionID) throws Exception {
+        for (Session s : sessions) {
+            if (s.getID().equals(sessionID)) {
+                return s;
+            }
+        }
+        throw new Exception();
     }
 }

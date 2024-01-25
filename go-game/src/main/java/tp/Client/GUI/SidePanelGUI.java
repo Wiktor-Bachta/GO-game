@@ -18,6 +18,7 @@ public class SidePanelGUI extends VBox {
     private Button passButton;
     private Button resignButton;
     private ChatBox chatBox;
+    private EndGamePropositionBox endGameBox;
 
     public SidePanelGUI(Client client) {
         this.client = client;
@@ -32,8 +33,10 @@ public class SidePanelGUI extends VBox {
         passButton = new Button("Pass");
         resignButton = new Button("Resign");
         chatBox = new ChatBox(client);
+        endGameBox = new EndGamePropositionBox(client);
+        endGameBox.setVisible(false);
 
-        getChildren().addAll(turnInfo, passButton, resignButton, specialInfo, chatBox);
+        getChildren().addAll(turnInfo, passButton, resignButton, specialInfo, chatBox, endGameBox);
 
         passButton.setOnAction(e -> {
             if (client.getState() == ClientState.DOING_MOVE) {
@@ -69,5 +72,13 @@ public class SidePanelGUI extends VBox {
 
     public ChatBox getChatBox() {
         return chatBox;
+    }
+
+    public void showEndGameProposition(int playerPoints, int opponentPoints) {
+        endGameBox.show(playerPoints, opponentPoints);
+    }
+
+    public void hideEndGameProposition() {
+        endGameBox.setVisible(false);
     }
 }

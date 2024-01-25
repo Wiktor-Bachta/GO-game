@@ -4,7 +4,10 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import tp.Client.Client;
 import tp.Game.Game;
 import tp.Game.GUI.BoardGUI;
@@ -66,7 +69,7 @@ public class ClientGUI extends Application {
             } else {
                 sidePanelGUI.labelUpdateWait();
             }
-            stage.setScene(new Scene(layout, 960, 760));
+            stage.setScene(new Scene(layout, 1000, 760));
         });
 
     }
@@ -97,5 +100,9 @@ public class ClientGUI extends Application {
 
     public void sendPlayerChat(String string) {
         sidePanelGUI.getChatBox().addPlayerMessage(string);
+    }
+
+    public void showEndGameProposition(int playerPoints, int opponentPoints) {
+        sidePanelGUI.showEndGameProposition(playerPoints, opponentPoints);
     }
 }

@@ -37,44 +37,46 @@ public class Client {
 
     public void run() {
 
-                try {
-                    new Thread(new ServerHandler(serverConnection, clientMessageHandler)).start();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-        /* try {
-            
-
-            while (state == ClientState.SETTING_UP) {
-                Message serverMessage = serverConnection.getResponse();
-                clientMessageHandler.handleMessage(serverMessage);
-            }
-
-            while (game.isRunning()) {
-
-                switch (state) {
-                    case DOING_MOVE:
-                        System.out.println("DOING MOVE");
-                        Message clientMessage = game.doMove();
-                        serverConnection.sendMessage(clientMessage);
-                        break;
-                    case WAITING_FOR_MOVE:
-                        System.out.println("WAITING FOR MOVE");
-                        Message serverMessage = serverConnection.getResponse();
-                        clientMessageHandler.handleMessage(serverMessage);
-                        break;
-                    default:
-                        System.out.println("Unknown state");
-                        break;
-                }
-
-            }
+        try {
+            new Thread(new ServerHandler(serverConnection, clientMessageHandler)).start();
         } catch (IOException e) {
-            System.out.println("Client exception: " + e.getMessage());
+            // TODO Auto-generated catch block
             e.printStackTrace();
-        } */
+        }
+
+        /*
+         * try {
+         * 
+         * 
+         * while (state == ClientState.SETTING_UP) {
+         * Message serverMessage = serverConnection.getResponse();
+         * clientMessageHandler.handleMessage(serverMessage);
+         * }
+         * 
+         * while (game.isRunning()) {
+         * 
+         * switch (state) {
+         * case DOING_MOVE:
+         * System.out.println("DOING MOVE");
+         * Message clientMessage = game.doMove();
+         * serverConnection.sendMessage(clientMessage);
+         * break;
+         * case WAITING_FOR_MOVE:
+         * System.out.println("WAITING FOR MOVE");
+         * Message serverMessage = serverConnection.getResponse();
+         * clientMessageHandler.handleMessage(serverMessage);
+         * break;
+         * default:
+         * System.out.println("Unknown state");
+         * break;
+         * }
+         * 
+         * }
+         * } catch (IOException e) {
+         * System.out.println("Client exception: " + e.getMessage());
+         * e.printStackTrace();
+         * }
+         */
 
     }
 
@@ -96,13 +98,20 @@ public class Client {
 
     public void nextState() {
         if (state == ClientState.WAITING_FOR_MOVE) {
-            state = ClientState.DOING_MOVE;
-            getClientGUI().getSidePanelGUI().labelUpdateMove();
+            setMove();
+        } else {
+            setWait();
         }
-        else {
-            state = ClientState.WAITING_FOR_MOVE;
-            getClientGUI().getSidePanelGUI().labelUpdateWait();
-        }
+    }
+
+    public void setWait() {
+        state = ClientState.WAITING_FOR_MOVE;
+        getClientGUI().getSidePanelGUI().labelUpdateWait();
+    }
+
+    public void setMove() {
+        state = ClientState.DOING_MOVE;
+        getClientGUI().getSidePanelGUI().labelUpdateMove();
     }
 
     public void displayError(String error) {

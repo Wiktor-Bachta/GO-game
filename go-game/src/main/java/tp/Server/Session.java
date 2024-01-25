@@ -78,4 +78,12 @@ public class Session {
     public boolean getPassEndsGame() {
         return moveAnalyzer.getPassEndsGame();
     }
+
+    public boolean getOnePlayerAgreedToEnd() {
+        return moveAnalyzer.getOnePlayerAgreedToEnd();
+    }
+
+    public void setOnePlayerAgreedToEnd(boolean val) {
+        moveAnalyzer.setOnePlayerAgreedToEnd(val);
+    }
 }
