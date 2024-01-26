@@ -1,11 +1,8 @@
 package tp.Server;
 
-import tp.Client.Client;
 import tp.Client.ServerHandler;
-import tp.Client.GUI.ClientGUI;
 import tp.Connection.ServerConnection;
 import tp.Message.BotMessageHandler;
-import tp.Message.ClientMessageHandler;
 import tp.Message.Message;
 
 import java.io.*;
@@ -16,9 +13,12 @@ public class Bot {
     private BotMessageHandler botMessageHandler;
     private String currentSessionID;
     private String sessionID;
+    private ServerHandler serverHandler;
+    private BotIntelligence botIntelligence;
 
     public Bot(String sessionID) {
         this.sessionID = sessionID;
+        botIntelligence = new BotIntelligence();
         try {
             this.serverConnection = new ServerConnection("localhost", 8000);
         } catch (IOException e) {
@@ -29,14 +29,11 @@ public class Bot {
     public void run() {
 
         try {
-            new Thread(new ServerHandler(serverConnection, botMessageHandler)).start();
+            serverHandler = new ServerHandler(serverConnection, botMessageHandler);
+            new Thread(serverHandler).start();
             sendMessage("Launch;Join;" + sessionID);
         } catch (IOException e) {
         }
-    }
-
-    public void stop() {
-        System.out.println("Client stop");
     }
 
     public ServerConnection getServerConnection() {
@@ -53,5 +50,25 @@ public class Bot {
 
     public void sendMessage(String message) {
         serverConnection.sendMessage(new Message(message));
+    }
+
+    public void stop() {
+        serverHandler.stopGame();
+    }
+
+    public String getMove() {
+        return botIntelligence.getMove();
+    }
+
+    public void placeOpponentMove(int x, int y) {
+        botIntelligence.placeOpponentMove(x, y);
+    }
+
+    public void clearStone(int x, int y) {
+        botIntelligence.clearStone(x, y);
+    }
+
+    public void placeBotMove(int x, int y) {
+        botIntelligence.placeBotMove(x, y);
     }
 }

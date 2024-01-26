@@ -57,7 +57,6 @@ public class ClientMessageHandler implements MessageHandler {
                 System.out.println("Unknown message type");
                 break;
         }
-
     }
 
     private void handleEndGame(String[] msgArray) {
@@ -141,7 +140,6 @@ public class ClientMessageHandler implements MessageHandler {
     }
 
     private void handleMove(String msgArray[]) {
-
         switch (msgArray[1]) {
             case "Confirmed":
                 client.getClientGUI().placePlayerMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
@@ -159,9 +157,6 @@ public class ClientMessageHandler implements MessageHandler {
             case "Invalid":
                 break;
         }
-        // System.out.println("Get Move: " + msgArray[1] + ";" + msgArray[2]);
-        // client.setState(ClientState.DOING_MOVE);
-
     }
 
     private void handleDisconnect() {

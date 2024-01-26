@@ -14,7 +14,6 @@ public class ServerMessageHandler {
     List<Session> sessions;
     private Session currentSession;
     ClientHandler player;
-    Bot bot;
 
     public ServerMessageHandler(List<Session> sessions, ClientHandler player) {
         this.sessions = sessions;
@@ -97,8 +96,7 @@ public class ServerMessageHandler {
                     System.out.println("Play with bot");
                     sessions.add(session);
                     sendToPlayer("Launch;Start;" + sessionID + ";Move");
-                    bot = new Bot(sessionID);
-                    bot.run();
+                    new Bot(sessionID).run();
                 } else {
                     System.out.println("Play with user");
                     sessions.add(session);
