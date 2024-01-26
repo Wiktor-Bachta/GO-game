@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import tp.Game.Move;
 import tp.Game.Square;
 import tp.Game.SquareState;
 import tp.Message.Message;
@@ -37,14 +36,8 @@ public class MoveAnalyzer {
         this.session = session;
     }
 
-    public boolean analyzeMove(Move move) {
+    public boolean analyzeMove(int x, int y) {
 
-        String thisMove = move.getMove();
-
-        String[] splitMove = thisMove.split(";");
-
-        int x = Integer.parseInt(splitMove[0]);
-        int y = Integer.parseInt(splitMove[1]);
         Stone stoneToPlace = board[x][y];
 
         if (stoneToPlace.getState() == SquareState.EMPTY) {

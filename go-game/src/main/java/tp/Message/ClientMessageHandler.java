@@ -6,7 +6,7 @@ import tp.Client.GUI.ClientColor;
 
 import java.io.IOException;
 
-public class ClientMessageHandler {
+public class ClientMessageHandler implements MessageHandler {
 
     /**
      * Client wont return a response after receiving a message, it will send message
@@ -18,6 +18,7 @@ public class ClientMessageHandler {
         this.client = client;
     }
 
+    @Override
     public void handleMessage(Message message) throws IOException {
         String msg = message.getMessage();
         String[] msgArray = msg.split(";");
@@ -56,7 +57,6 @@ public class ClientMessageHandler {
                 System.out.println("Unknown message type");
                 break;
         }
-
     }
 
     private void handleEndGame(String[] msgArray) {
@@ -112,7 +112,7 @@ public class ClientMessageHandler {
     private void handleLaunch(String msgArray[]) throws IOException {
         switch (msgArray[1]) {
             case "Start":
-                client.getGame().setId(msgArray[2]);
+                client.setCurrentSessionID(msgArray[2]);
 
                 if (msgArray[3].equals("Move")) {
                     client.getClientGUI().setClientColor(ClientColor.BLACK);
@@ -131,15 +131,6 @@ public class ClientMessageHandler {
             case "Wait":
                 // client.displayMessage("Wait for user to join: ID: " + msgArray[2]);
                 client.getClientGUI().getChoiceGUI().displayID("Wait for user to join: ID: " + msgArray[2]);
-
-                /*
-                 * while(true)
-                 * {
-                 * Message serverMessage = client.getServerConnection().getResponse();
-                 * handleMessage(serverMessage);
-                 * break;
-                 * }
-                 */
                 break;
             default:
                 client.displayError("Launch: Unknown message type");
@@ -149,7 +140,6 @@ public class ClientMessageHandler {
     }
 
     private void handleMove(String msgArray[]) {
-
         switch (msgArray[1]) {
             case "Confirmed":
                 client.getClientGUI().placePlayerMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
@@ -167,9 +157,6 @@ public class ClientMessageHandler {
             case "Invalid":
                 break;
         }
-        // System.out.println("Get Move: " + msgArray[1] + ";" + msgArray[2]);
-        // client.setState(ClientState.DOING_MOVE);
-
     }
 
     private void handleDisconnect() {

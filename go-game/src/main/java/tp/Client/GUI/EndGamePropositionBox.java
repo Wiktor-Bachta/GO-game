@@ -1,15 +1,10 @@
 package tp.Client.GUI;
 
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import tp.Client.Client;
-import tp.Message.Message;
 
 public class EndGamePropositionBox extends VBox {
 
@@ -28,12 +23,12 @@ public class EndGamePropositionBox extends VBox {
         pointLabel = new Label();
 
         accept.setOnAction(e -> {
-            client.getServerConnection().sendMessage(new Message("EndDecision;" + client.getGame().getId() + ";Accepted"));
+            client.sendMessage("EndDecision;Accepted");
             setVisible(false);
         });
 
         decline.setOnAction(e -> {
-            client.getServerConnection().sendMessage(new Message("EndDecision;" + client.getGame().getId() + ";Declined"));
+            client.sendMessage("EndDecision;Declined");
             setVisible(false);
         });
 

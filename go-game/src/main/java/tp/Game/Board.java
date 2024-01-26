@@ -1,16 +1,19 @@
 package tp.Game;
 
+import tp.Client.Client;
+import tp.Client.ClientState;
 import tp.Game.GUI.BoardGUI;
+import tp.Message.Message;
 
 public class Board {
-    Game game;
+    Client client;
     BoardGUI boardGUI;
     Square[][] squares;
-    int size;
+    int size = 19;
+    int pixelSize = 19 * 40;
 
-    public Board(Game game, int size, int pixelSize) {
-        this.game = game;
-        this.size = size;
+    public Board(Client client) {
+        this.client = client;
         squares = new Square[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -33,6 +36,8 @@ public class Board {
     }
 
     public void sendMessage(String string) {
-        game.sendMessage(string);
+        if (client.getState() == ClientState.DOING_MOVE) {
+            client.getServerConnection().sendMessage(new Message("Move;" + string));
+        }
     }
 }

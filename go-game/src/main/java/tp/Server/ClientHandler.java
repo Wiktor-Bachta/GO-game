@@ -33,15 +33,12 @@ public class ClientHandler implements Runnable {
 
                 System.out.println("Received message: " + message.getMessage());
 
-                message = messageHandler.handleMessage(message);
+                messageHandler.handleMessage(message);
 
                 if(message.getMessage().equals("Launch;Disconnect")) {
                     stopGame();
                     break;
                 }
-                System.out.println("Sent message: " + message.getMessage());
-
-                clientConnection.sendMessage(message);
             }
 
         } catch (IOException e) {
