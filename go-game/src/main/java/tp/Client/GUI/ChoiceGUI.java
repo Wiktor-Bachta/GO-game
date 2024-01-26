@@ -1,46 +1,45 @@
 package tp.Client.GUI;
 
-import java.io.IOException;
-
 import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tp.Client.Client;
-import tp.Message.Message;
 
 public class ChoiceGUI extends VBox {
     private Client client;
+
+    private Button playWithBotButton;
+    private Button playWithUserButton;
+    private Button exitButton;
+    private Button createGameButton;
+    private Button joinGameButton;
+    private Button goBackButton;
+    private TextField idTextField;
     private Label idLabel;
     private Stage popupStage;
 
     public ChoiceGUI(Client client) {
         this.client = client;
 
-        Button playWithBotButton = new Button("Play with bot");
-        Button playWithUserButton = new Button("Play with user");
-        Button exitButton = new Button("Exit");
-        VBox playWithUserVBox = new VBox();
-        Button createGameButton = new Button("Create game");
-        Button joinGameButton = new Button("Join game");
-        TextField idTextField = new TextField("Wpisz id");
+        playWithBotButton = new Button("Play with bot");
+        playWithUserButton = new Button("Play with user");
+        exitButton = new Button("Exit");
+        createGameButton = new Button("Create game");
+        joinGameButton = new Button("Join game");
+        goBackButton = new Button("Go Back");
+        idTextField = new TextField("Wpisz id");
         idLabel = new Label();
-        playWithUserVBox.setPadding(new Insets(10, 10, 10, 10));
-        playWithUserVBox.getChildren().addAll(createGameButton, idLabel, joinGameButton, idTextField);
 
         playWithBotButton.setOnAction(e -> {
             client.sendMessage("Launch;Create;bot");
         });
 
         playWithUserButton.setOnAction(e -> {
-            popupStage = new Stage();
-            Scene scene = new Scene(playWithUserVBox, 400, 400);
-            popupStage.setScene(scene);
-            popupStage.show();
+            switchToPlayWithUser();
         });
 
         exitButton.setOnAction(e -> {
@@ -59,19 +58,29 @@ public class ChoiceGUI extends VBox {
             }
         });
 
+        goBackButton.setOnAction(e -> {
+            switchToMainMenu();
+        });
+
         setSpacing(10);
         setPadding(new Insets(10, 10, 10, 10));
         getChildren().addAll(playWithBotButton, playWithUserButton, exitButton);
 
     }
 
+    private void switchToPlayWithUser() {
+        getChildren().clear();
+        getChildren().addAll(createGameButton, idLabel, joinGameButton, idTextField, goBackButton);
+    }
+
+    private void switchToMainMenu() {
+        getChildren().clear();
+        getChildren().addAll(playWithBotButton, playWithUserButton, exitButton);
+    }
+
     public void displayID(String idMessage) {
         Platform.runLater(() -> {
             idLabel.setText(idMessage);
         });
-    }
-
-    public void terminateChoiceGUI() {
-        popupStage.close();
     }
 }

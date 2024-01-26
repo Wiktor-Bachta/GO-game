@@ -64,7 +64,6 @@ public class ClientGUI extends Application {
 
     public void displayBoard() {
         Platform.runLater(() -> {
-            choiceGUI.terminateChoiceGUI();
             board = new Board(client);
             boardGUI = board.getBoardGUI();
             sidePanelGUI = new SidePanelGUI(client);
