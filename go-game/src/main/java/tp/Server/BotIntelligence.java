@@ -21,8 +21,12 @@ public class BotIntelligence {
     // random moves for now
     public String getMove() {
         Random random = new Random();
-        int x = random.nextInt(19) + 1;
-        int y = random.nextInt(19) + 1;
+        int x;
+        int y;
+        do {
+            x = random.nextInt(19) + 1;
+            y = random.nextInt(19) + 1;
+        } while (board[x][y].getState() != SquareState.EMPTY);
         return x + ";" + y;
     }
 
@@ -37,5 +41,5 @@ public class BotIntelligence {
     public void placeBotMove(int x, int y) {
         board[x][y].setState(SquareState.WHITE);
     }
-    
+
 }
