@@ -112,7 +112,7 @@ public class ClientMessageHandler {
     private void handleLaunch(String msgArray[]) throws IOException {
         switch (msgArray[1]) {
             case "Start":
-                client.getGame().setId(msgArray[2]);
+                client.setCurrentSessionID(msgArray[2]);
 
                 if (msgArray[3].equals("Move")) {
                     client.getClientGUI().setClientColor(ClientColor.BLACK);
@@ -131,15 +131,6 @@ public class ClientMessageHandler {
             case "Wait":
                 // client.displayMessage("Wait for user to join: ID: " + msgArray[2]);
                 client.getClientGUI().getChoiceGUI().displayID("Wait for user to join: ID: " + msgArray[2]);
-
-                /*
-                 * while(true)
-                 * {
-                 * Message serverMessage = client.getServerConnection().getResponse();
-                 * handleMessage(serverMessage);
-                 * break;
-                 * }
-                 */
                 break;
             default:
                 client.displayError("Launch: Unknown message type");

@@ -2,7 +2,6 @@ package tp.Server;
 
 import tp.Client.Client;
 import tp.Database.DatabaseFacade;
-import tp.Game.Move;
 import tp.Game.SquareState;
 import tp.GameLogic.MoveAnalyzer;
 import tp.Message.Message;
@@ -11,9 +10,9 @@ import java.util.UUID;
 
 public class Session {
     private String ID;
+    //player one is always first
     private ClientHandler player1;
     private ClientHandler player2;
-    private ClientHandler firstPlayer;
     private DatabaseFacade databaseFacade;
     private int moveCount = 0;
 
@@ -26,10 +25,6 @@ public class Session {
         this.player1 = player1;
         this.moveAnalyzer = new MoveAnalyzer(this);
         databaseFacade = new DatabaseFacade();
-    }
-
-    public void setFirstPlayer(ClientHandler player) {
-        firstPlayer = player;
     }
 
     private String generateID() {
@@ -65,8 +60,8 @@ public class Session {
         return ableToJoin;
     }
 
-    public boolean analyzeMove(Move move) {
-        return moveAnalyzer.analyzeMove(move);
+    public boolean analyzeMove(int x, int y) {
+        return moveAnalyzer.analyzeMove(x, y);
     }
 
     public boolean hasPlayer(ClientHandler player) {
@@ -100,8 +95,10 @@ public class Session {
         return moveAnalyzer.calculatePoints(state);
     }
 
-    public boolean isFirstPlayer(ClientHandler player) {
-        return player == firstPlayer;
+    public void swapPlayers() {
+        ClientHandler temp = player1;
+        player1 = player2;
+        player2 = temp;
     }
 
     public void skipTurn() {

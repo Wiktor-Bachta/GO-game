@@ -1,4 +1,4 @@
-package tp.Game.GUI;
+package tp.Client.GUI;
 
 import java.io.IOException;
 
@@ -14,7 +14,6 @@ import tp.Client.Client;
 import tp.Message.Message;
 
 public class ChoiceGUI extends VBox {
-    private String msg;
     private Client client;
     private Label idLabel;
     private Stage popupStage;
@@ -34,8 +33,7 @@ public class ChoiceGUI extends VBox {
         playWithUserVBox.getChildren().addAll(createGameButton, idLabel, joinGameButton, idTextField);
 
         playWithBotButton.setOnAction(e -> {
-            msg = "Launch;Create;bot";
-            client.getServerConnection().sendMessage(new Message(msg));
+            client.sendMessage("Launch;Create;bot");
         });
 
         playWithUserButton.setOnAction(e -> {
@@ -46,21 +44,18 @@ public class ChoiceGUI extends VBox {
         });
 
         exitButton.setOnAction(e -> {
-            msg = "Disconnect";
-            client.getServerConnection().sendMessage(new Message(msg));
+            client.sendMessage("Disconnect");
             System.exit(0);
         });
 
         createGameButton.setOnAction(e -> {
-            msg = "Launch;Create;user";
-            client.getServerConnection().sendMessage(new Message(msg));
+            client.sendMessage("Launch;Create;user");
         });
 
         joinGameButton.setOnAction(e -> {
             String id = idTextField.getText();
             if (!id.isEmpty()) {
-                msg = "Launch;Join;" + id + ";";
-                client.getServerConnection().sendMessage(new Message(msg));
+                client.sendMessage("Launch;Join;" + id);
             }
         });
 
@@ -68,10 +63,6 @@ public class ChoiceGUI extends VBox {
         setPadding(new Insets(10, 10, 10, 10));
         getChildren().addAll(playWithBotButton, playWithUserButton, exitButton);
 
-    }
-
-    public String getMsg() {
-        return msg;
     }
 
     public void displayID(String idMessage) {
