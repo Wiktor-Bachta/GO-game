@@ -12,7 +12,7 @@
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://fitappserver.postgres.database.azure.com"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://fitappserver.postgres.database.azure.com:5432/gogame"/>
             <property name="javax.persistence.jdbc.user" value="{env.GoGameHistoryDataBaseUser}"/>
             <property name="javax.persistence.jdbc.password" value="{env.GoGameHistoryDataBasePasswor}"/>
         </properties>
