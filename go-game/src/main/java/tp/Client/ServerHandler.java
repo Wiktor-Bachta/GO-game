@@ -1,16 +1,12 @@
 package tp.Client;
 
-import tp.Message.ClientMessageHandler;
 import tp.Message.Message;
 import tp.Message.MessageHandler;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.List;
 
-import tp.Connection.ClientConnection;
 import tp.Connection.ServerConnection;
-import tp.Message.ServerMessageHandler;
 
 
 public class ServerHandler implements Runnable {
@@ -48,7 +44,6 @@ public class ServerHandler implements Runnable {
     }
 
     public void stopGame() {
-        System.out.println("Client disconnected");
         gameRunning = false;
     }
 

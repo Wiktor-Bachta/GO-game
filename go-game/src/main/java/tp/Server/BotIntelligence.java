@@ -19,13 +19,15 @@ public class BotIntelligence {
     }
 
     // random moves for now
+    // important not to be deterministic 
+    // in case move is invalid
     public String getMove() {
         Random random = new Random();
         int x;
         int y;
         do {
-            x = random.nextInt(19) + 1;
-            y = random.nextInt(19) + 1;
+            x = random.nextInt(19);
+            y = random.nextInt(19);
         } while (board[x][y].getState() != SquareState.EMPTY);
         return x + ";" + y;
     }

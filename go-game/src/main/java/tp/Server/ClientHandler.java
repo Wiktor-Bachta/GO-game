@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private void stopGame() {
+    public void stopGame() {
         System.out.println("Client disconnected");
         gameRunning = false;
     }

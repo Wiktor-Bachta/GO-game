@@ -124,19 +124,11 @@ public class ClientMessageHandler implements MessageHandler {
                     client.getClientGUI().displayBoard();
                 }
                 break;
-            case "Error":
-                client.displayError(msgArray[2]);
-                // client.getGame().launch(); // Launch again
-                break;
             case "Wait":
                 // client.displayMessage("Wait for user to join: ID: " + msgArray[2]);
                 client.getClientGUI().getChoiceGUI().displayID("Wait for user to join: ID: " + msgArray[2]);
                 break;
-            default:
-                client.displayError("Launch: Unknown message type");
-                break;
         }
-
     }
 
     private void handleMove(String msgArray[]) {

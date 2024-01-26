@@ -27,6 +27,9 @@ public class BotMessageHandler implements MessageHandler {
         String msgType = msgArray[0];
 
         switch (msgType) {
+            case "Launch":
+                handleLaunch(msgArray);
+                break;
             case "Move":
                 handleMove(msgArray);
                 break;
@@ -76,6 +79,7 @@ public class BotMessageHandler implements MessageHandler {
     }
 
     private void handleEndGame() {
+        bot.sendMessage("Disconnect");
         bot.stop();
     }
 
@@ -92,4 +96,16 @@ public class BotMessageHandler implements MessageHandler {
         }
     }
 
+    private void handleLaunch(String[] msgArray) {
+        switch (msgArray[1]) {
+
+            case "Start":
+                if (msgArray[3].equals("Move")) {
+                    bot.sendMessage("Move;" + bot.getMove());
+                }
+                break;
+            case "Wait":
+                break;
+        }
+    }
 }
