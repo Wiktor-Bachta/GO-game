@@ -6,7 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import tp.Client.Client;
 
 public class ChoiceGUI extends VBox {
@@ -20,7 +19,6 @@ public class ChoiceGUI extends VBox {
     private Button goBackButton;
     private TextField idTextField;
     private Label idLabel;
-    private Stage popupStage;
 
     public ChoiceGUI(Client client) {
         this.client = client;
