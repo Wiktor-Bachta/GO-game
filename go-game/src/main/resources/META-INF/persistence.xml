@@ -6,15 +6,15 @@
              version="2.2">
 
     <persistence-unit name="default">
-    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <class>tp.Database.dto.GameHistory</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/go"/>
-            <property name="javax.persistence.jdbc.user" value="admin"/>
-            <property name="javax.persistence.jdbc.password" value="password"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://fitappserver.postgres.database.azure.com"/>
+            <property name="javax.persistence.jdbc.user" value="{env.GoGameHistoryDataBaseUser}"/>
+            <property name="javax.persistence.jdbc.password" value="{env.GoGameHistoryDataBasePasswor}"/>
         </properties>
     </persistence-unit>
 </persistence>
