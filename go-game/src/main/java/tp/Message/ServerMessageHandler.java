@@ -33,9 +33,6 @@ public class ServerMessageHandler {
             case "Launch":
                 handleLaunch(msgArray[1], msgArray[2]);
                 break;
-            case "Disconnect":
-                System.out.println("Disconnect");
-                break;
             case "Move":
                 handleMove(msgArray[1], msgArray[2]);
                 break;
@@ -54,10 +51,17 @@ public class ServerMessageHandler {
             case "EndDecision":
                 handleEndDecision(msgArray[1]);
                 break;
+            case "Disconnect":
+                handleDisconnect();
+                break;
             default:
                 System.out.println("Unknown message type");
                 break;
         }
+    }
+
+    private void handleDisconnect() {
+        player.stopGame();
     }
 
     private void handleEndDecision(String decision) {
@@ -95,7 +99,7 @@ public class ServerMessageHandler {
                     currentSession = session;
                     System.out.println("Play with bot");
                     sessions.add(session);
-                    sendToPlayer("Launch;Start;" + sessionID + ";Move");
+                    //sendToPlayer("Launch;Start;" + sessionID + ";Move");
                     new Bot(sessionID).run();
                 } else {
                     System.out.println("Play with user");

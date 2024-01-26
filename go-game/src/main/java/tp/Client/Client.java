@@ -14,6 +14,7 @@ public class Client {
     private ClientMessageHandler clientMessageHandler;
     private ClientGUI clientGUI;
     private String currentSessionID;
+    private ServerHandler serverHandler;
 
     public Client(ClientGUI clientGUI) {
         this.clientGUI = clientGUI;
@@ -27,13 +28,14 @@ public class Client {
     public void run() {
 
         try {
-            new Thread(new ServerHandler(serverConnection, clientMessageHandler)).start();
+            serverHandler = new ServerHandler(serverConnection, clientMessageHandler);
+            new Thread(serverHandler).start();
         } catch (IOException e) {
         }
     }
 
     public void stop() {
-        System.out.println("Client stop");
+        serverHandler.stopGame();
     }
 
     public void setState(ClientState state) {
@@ -60,20 +62,6 @@ public class Client {
     public void setMove() {
         state = ClientState.DOING_MOVE;
         getClientGUI().getSidePanelGUI().labelUpdateMove();
-    }
-
-    public void displayError(String error) {
-        /**
-         * TODO: tutaj osobne gui z errorem
-         */
-        System.out.println(error);
-    }
-
-    public void displayMessage(String message) {
-        /**
-         * TODO: tutaj osobne gui z message
-         */
-        System.out.println(message);
     }
 
     public ServerConnection getServerConnection() {

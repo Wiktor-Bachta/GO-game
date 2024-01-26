@@ -42,6 +42,7 @@ public class ChoiceGUI extends VBox {
 
         exitButton.setOnAction(e -> {
             client.sendMessage("Disconnect");
+            client.stop();
             System.exit(0);
         });
 
