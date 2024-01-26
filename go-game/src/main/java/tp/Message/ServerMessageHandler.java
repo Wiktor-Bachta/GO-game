@@ -2,6 +2,7 @@ package tp.Message;
 
 import tp.Database.DatabaseFacade;
 import tp.Game.SquareState;
+import tp.Server.Bot;
 import tp.Server.ClientHandler;
 import tp.Server.Session;
 
@@ -13,6 +14,7 @@ public class ServerMessageHandler {
     List<Session> sessions;
     private Session currentSession;
     ClientHandler player;
+    Bot bot;
 
     public ServerMessageHandler(List<Session> sessions, ClientHandler player) {
         this.sessions = sessions;
@@ -24,29 +26,28 @@ public class ServerMessageHandler {
      * wait for anything
      *
      */
-    public Message handleMessage(Message message) throws IOException {
+    public void handleMessage(Message message) throws IOException {
         String msg = message.getMessage();
         String[] msgArray = msg.split(";");
         String msgType = msgArray[0];
-        String response = "";
         switch (msgType) {
             case "Launch":
-                response = handleLaunch(msgArray[1], msgArray[2]);
+                handleLaunch(msgArray[1], msgArray[2]);
                 break;
             case "Disconnect":
                 System.out.println("Disconnect");
                 break;
             case "Move":
-                response = handleMove(msgArray[1], msgArray[2]);
+                handleMove(msgArray[1], msgArray[2]);
                 break;
             case "Pass":
-                response = handlePass();
+                handlePass();
                 break;
             case "Surrender":
-                response = handleSurrender();
+                handleSurrender();
                 break;
             case "Chat":
-                response = handleChat(msgArray[1]);
+                handleChat(msgArray[1]);
                 break;
             case "Error":
                 System.out.println("Error");
@@ -58,7 +59,6 @@ public class ServerMessageHandler {
                 System.out.println("Unknown message type");
                 break;
         }
-        return new Message(response);
     }
 
     private void handleEndDecision(String decision) {
@@ -86,31 +86,19 @@ public class ServerMessageHandler {
         }
     }
 
-    private String handleLaunch(String gameType, String opponent) throws IOException {
-        String response = "";
-
+    private void handleLaunch(String gameType, String opponent) throws IOException {
         switch (gameType) {
             case "Create":
                 Session session = new Session(player);
                 String sessionID = session.getID();
 
                 if ("bot".equals(opponent)) {
+                    currentSession = session;
                     System.out.println("Play with bot");
-                    session.addPlayer2();
                     sessions.add(session);
-
-                    // randomize who goes first - black always goes first
-                    int random = (int) (Math.random() * 2);
-                    if (random == 0) {
-                        response = "Launch;" + "Start;" + sessionID + ";" + "Wait";
-                        session.getPlayer1().getClientConnection().sendMessage(new Message(response));
-                        response = "Launch;" + "Start;" + sessionID + ";" + "Move";
-                    } else {
-                        response = "Launch;" + "Start;" + sessionID + ";" + "Move";
-                        session.getPlayer2().getClientConnection().sendMessage(new Message(response));
-                        response = "Launch;" + "Start;" + sessionID + ";" + "Wait";
-                    }
-
+                    sendToPlayer("Launch;Start;" + sessionID + ";Move");
+                    bot = new Bot(sessionID);
+                    bot.run();
                 } else {
                     System.out.println("Play with user");
                     sessions.add(session);
@@ -146,7 +134,7 @@ public class ServerMessageHandler {
                             System.out.println("Session joined");
                         } else {
                             System.out.println("Session is full");
-                            response = "Launch;" + "Error;Session is full;";
+                            sendToPlayer("Launch;Error;Session is full;");
                         }
                         sessionExists = true;
                         break;
@@ -154,18 +142,17 @@ public class ServerMessageHandler {
                 }
                 if (!sessionExists) {
                     System.out.println("Session does not exist");
-                    response = "Launch;" + "Error;Session does not exist;";
+                    sendToPlayer("Launch;Error;Session does not exist;");
                 }
                 break;
             default:
                 System.out.println("Unknown launch message");
-                response = "Launch;" + "Error;Unknown launch message;";
+                sendToPlayer("Launch;Error;Unknown launch message;");
                 break;
         }
-        return "Wait";
     }
 
-    private String handleMove(String xString, String yString) {
+    private void handleMove(String xString, String yString) {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
 
@@ -177,10 +164,9 @@ public class ServerMessageHandler {
         } else {
             sendToPlayer("Move;Invalid;");
         }
-        return "Wait";
     }
 
-    private String handlePass() {
+    private void handlePass() {
         currentSession.skipTurn();
         // s.getDatabaseFacade().addMoveToDatabase(sessionID,
         // s.getAndUpdateMoveCount());
@@ -191,22 +177,18 @@ public class ServerMessageHandler {
             currentSession.setPassEndsGame(true);
             sendToOpponent("Pass;Regular");
         }
-        return "Wait";
     }
 
-    private String handleChat(String message) throws IOException {
+    private void handleChat(String message) throws IOException {
         sendToPlayer("Chat;Player;" + message);
         sendToOpponent("Chat;Opponent;" + message);
-        return "Wait";
     }
 
-    private String handleSurrender() {
+    private void handleSurrender() {
         int playerPoints = getPlayerPoints();
         int opponentPoints = getOpponentPoints();
         sendToPlayer("EndGame;SL;" + playerPoints + ";" + opponentPoints);
         sendToOpponent("EndGame;SW;" + opponentPoints + ";" + playerPoints);
-
-        return "Wait";
     }
 
     private void sendToPlayer(String message) {

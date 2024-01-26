@@ -6,7 +6,7 @@ import tp.Client.GUI.ClientColor;
 
 import java.io.IOException;
 
-public class ClientMessageHandler {
+public class ClientMessageHandler implements MessageHandler {
 
     /**
      * Client wont return a response after receiving a message, it will send message
@@ -18,6 +18,7 @@ public class ClientMessageHandler {
         this.client = client;
     }
 
+    @Override
     public void handleMessage(Message message) throws IOException {
         String msg = message.getMessage();
         String[] msgArray = msg.split(";");

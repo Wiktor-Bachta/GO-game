@@ -42,8 +42,7 @@ public class Session {
         ableToJoin = false;
     }
 
-    public void addPlayer2(){
-        //TODO: add bot
+    public void addBot(){
 
         ableToJoin = false;
     }

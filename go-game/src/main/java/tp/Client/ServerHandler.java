@@ -2,6 +2,8 @@ package tp.Client;
 
 import tp.Message.ClientMessageHandler;
 import tp.Message.Message;
+import tp.Message.MessageHandler;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
@@ -15,9 +17,9 @@ public class ServerHandler implements Runnable {
     private Socket serverSocket;
     private boolean gameRunning;
     private ServerConnection serverConnection;
-    private ClientMessageHandler messageHandler;
+    private MessageHandler messageHandler;
 
-    public ServerHandler(ServerConnection serverConnection, ClientMessageHandler messageHandler) throws IOException {
+    public ServerHandler(ServerConnection serverConnection, MessageHandler messageHandler) throws IOException {
         this.serverConnection = serverConnection;
         this.messageHandler = messageHandler;
     }
