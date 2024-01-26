@@ -78,7 +78,7 @@ public class ServerMessageHandler {
                     sendToPlayer("EndGame;L;" + playerPoints + ";" + opponentPoints);
                     sendToOpponent("EndGame;W;" + opponentPoints + ";" + playerPoints);
                 }
-                s.getDatabaseFacade().close();
+                currentSession.getDatabaseFacade().close();
             } else {
                 currentSession.setOnePlayerAgreedToEnd(true);
             }
@@ -160,7 +160,7 @@ public class ServerMessageHandler {
 
         boolean valid = currentSession.analyzeMove(x, y);
         if (valid) {
-            s.getDatabaseFacade().addMoveToDatabase(sessionID, s.getAndUpdateMoveCount(),
+            currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(), currentSession.getAndUpdateMoveCount());
             sendToPlayer("Move;Confirmed;" + x + ";" + y + ";");
             sendToOpponent("Move;New;" + x + ";" + y + ";");
         } else {
@@ -170,8 +170,8 @@ public class ServerMessageHandler {
 
     private void handlePass() {
         currentSession.skipTurn();
-        s.getDatabaseFacade().addMoveToDatabase(sessionID,
-        s.getAndUpdateMoveCount());
+        currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(),
+        currentSession.getAndUpdateMoveCount());
         if (currentSession.getPassEndsGame() == true) {
             sendToBothPlayers("Pass;End");
             currentSession.setPassEndsGame(false);
