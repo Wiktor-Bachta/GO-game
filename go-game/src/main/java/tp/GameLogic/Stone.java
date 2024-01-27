@@ -1,18 +1,18 @@
 package tp.GameLogic;
 
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 
 public class Stone {
     private int x;
     private int y;
-    private SquareState stoneState;
+    private StoneState stoneState;
     private Group group;
 
     public Stone(int x, int y) {
         this.x = x;
         this.y = y;
         this.group = null; // Initially not part of any group
-        this.stoneState = SquareState.EMPTY;
+        this.stoneState = StoneState.EMPTY;
     }
 
     public int getX() {
@@ -31,17 +31,17 @@ public class Stone {
         this.group = group;
     }
 
-    public SquareState getState() {
+    public StoneState getState() {
         return stoneState;
     }
 
-    public void setState(SquareState state) {
+    public void setState(StoneState state) {
         this.stoneState = state;
     }
 
     public void reset() {
         group.getStones().remove(this);
         group = null;
-        stoneState = SquareState.EMPTY;
+        stoneState = StoneState.EMPTY;
     }
 }

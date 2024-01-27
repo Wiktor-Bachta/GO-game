@@ -2,17 +2,19 @@ package tp.Server;
 
 import java.util.Random;
 
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 import tp.GameLogic.Stone;
 
 public class BotIntelligence {
 
     private Stone[][] board;
+    private int size;
 
-    public BotIntelligence() {
-        this.board = new Stone[19][19];
-        for (int i = 0; i < 19; i++) {
-            for (int j = 0; j < 19; j++) {
+    public BotIntelligence(int size) {
+        this.size = size;
+        this.board = new Stone[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 board[i][j] = new Stone(i, j);
             }
         }
@@ -26,22 +28,22 @@ public class BotIntelligence {
         int x;
         int y;
         do {
-            x = random.nextInt(19);
-            y = random.nextInt(19);
-        } while (board[x][y].getState() != SquareState.EMPTY);
+            x = random.nextInt(size);
+            y = random.nextInt(size);
+        } while (board[x][y].getState() != StoneState.EMPTY);
         return x + ";" + y;
     }
 
     public void placeOpponentMove(int x, int y) {
-        board[x][y].setState(SquareState.BLACK);
+        board[x][y].setState(StoneState.BLACK);
     }
 
     public void clearStone(int x, int y) {
-        board[x][y].reset();
+        board[x][y].setState(StoneState.EMPTY);
     }
 
     public void placeBotMove(int x, int y) {
-        board[x][y].setState(SquareState.WHITE);
+        board[x][y].setState(StoneState.WHITE);
     }
 
 }

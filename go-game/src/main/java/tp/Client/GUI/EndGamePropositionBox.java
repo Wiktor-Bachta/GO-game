@@ -1,6 +1,7 @@
 package tp.Client.GUI;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -16,11 +17,14 @@ public class EndGamePropositionBox extends VBox {
     public EndGamePropositionBox(Client client) {
         this.client = client;
 
+        setMaxWidth(220);
+        setSpacing(10);
+        setPadding(new Insets(10, 10, 10, 10));
 
-        setMaxWidth(200);
         accept = new Button("Accept");
         decline = new Button("Decline");
         pointLabel = new Label();
+        pointLabel.setWrapText(true);
 
         accept.setOnAction(e -> {
             client.sendMessage("EndDecision;Accepted");
@@ -38,8 +42,8 @@ public class EndGamePropositionBox extends VBox {
 
     public void show(int playerPoints, int opponentPoints) {
         Platform.runLater(() -> {
-            pointLabel.setText(("Do you want to end the game?\n" + "If you don't you opponent will continue\n"
-                + "Your points: " + playerPoints + "\nOpponent points: " + opponentPoints));
+            pointLabel.setText("Do you want to end the game?\n\n" + "If you don't, your opponent will continue.\n\n"
+                    + "Your points: " + playerPoints + "\nOpponent points: " + opponentPoints);
         });
         setVisible(true);
     }

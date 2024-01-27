@@ -9,6 +9,7 @@ import tp.Server.Bot;
 public class BotMessageHandler implements MessageHandler {
 
     private Bot bot;
+    int invalidInARow = 0;
 
     public BotMessageHandler(Bot bot) {
         this.bot = bot;
@@ -18,7 +19,7 @@ public class BotMessageHandler implements MessageHandler {
     public void handleMessage(Message message) throws IOException {
         try {
             // delay
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -53,6 +54,7 @@ public class BotMessageHandler implements MessageHandler {
         switch (msgArray[1]) {
             case "Confirmed":
                 bot.placeBotMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
+                invalidInARow = 0;
                 break;
             case "New":
                 bot.placeOpponentMove(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
@@ -62,7 +64,12 @@ public class BotMessageHandler implements MessageHandler {
                 bot.clearStone(Integer.parseInt(msgArray[2]), Integer.parseInt(msgArray[3]));
                 break;
             case "Invalid":
-                bot.sendMessage("Move;" + bot.getMove());
+                if (invalidInARow > 5) {
+                    bot.sendMessage("Surrender");
+                } else {
+                    bot.sendMessage("Move;" + bot.getMove());
+                    invalidInARow++;
+                }
                 break;
         }
     }

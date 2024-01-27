@@ -1,30 +1,44 @@
 package tp.Server;
 
-import tp.Client.Client;
 import tp.Database.DatabaseFacade;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 import tp.GameLogic.MoveAnalyzer;
-import tp.Message.Message;
+import tp.Database.dto.GameHistory;
+import tp.Database.dto.MoveType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Session {
     private String ID;
-    //player one is always first
+    // player one is always first
     private ClientHandler player1;
     private ClientHandler player2;
     private DatabaseFacade databaseFacade;
     private int moveCount = 0;
-
+    List<GameHistory> gameHistory;
     private MoveAnalyzer moveAnalyzer;
+    private int boardSize;
 
     private boolean ableToJoin = true;
 
     public Session(ClientHandler player1) {
         this.ID = generateID();
         this.player1 = player1;
-        this.moveAnalyzer = new MoveAnalyzer(this);
         databaseFacade = new DatabaseFacade();
+    }
+
+    public void setBoardSize(int size) {
+        this.boardSize = size;
+    }
+
+    public void createMoveAnalyzer() {
+        moveAnalyzer = new MoveAnalyzer(this);
+    }
+
+    public int getBoardSize() {
+        return boardSize;
     }
 
     private String generateID() {
@@ -37,12 +51,12 @@ public class Session {
         return this.ID;
     }
 
-    public void addPlayer2(ClientHandler player2){
+    public void addPlayer2(ClientHandler player2) {
         this.player2 = player2;
         ableToJoin = false;
     }
 
-    public void addBot(){
+    public void addBot() {
 
         ableToJoin = false;
     }
@@ -63,17 +77,6 @@ public class Session {
         return moveAnalyzer.analyzeMove(x, y);
     }
 
-    public boolean hasPlayer(ClientHandler player) {
-        return (player1 == player || player2 == player);
-    }
-
-    public ClientHandler getSecondPlayer(ClientHandler player) {
-        if (player1 == player) {
-            return player1;
-        }
-        return player2;
-    }
-
     public void setPassEndsGame(boolean val) {
         moveAnalyzer.setPassEndsGame(val);
     }
@@ -90,7 +93,7 @@ public class Session {
         moveAnalyzer.setOnePlayerAgreedToEnd(val);
     }
 
-    public int getPoints(SquareState state) {
+    public int getPoints(StoneState state) {
         return moveAnalyzer.calculatePoints(state);
     }
 
@@ -109,8 +112,38 @@ public class Session {
         return moveCount;
     }
 
+    public int getMoveCount() {
+        return moveCount;
+    }
+
     public DatabaseFacade getDatabaseFacade() {
         return databaseFacade;
     }
 
+    public void loadGameHistory() {
+        if (gameHistory != null) {
+            return;
+        }
+        gameHistory = databaseFacade.getGameHistory(ID);
+    }
+
+    public List<String> getMoves(int number) {
+        List<String> result = new ArrayList<String>();
+        for (GameHistory move : gameHistory) {
+            if (move.getMoveNumber() == number) {
+                result.add(getMoveForm(move));
+            }
+        }
+        return result;
+    }
+
+    private String getMoveForm(GameHistory move) {
+        if (move.getMoveType() == MoveType.Move) {
+            return "Move;" + move.getX() + ";" + move.getY();
+        } else if (move.getMoveType() == MoveType.Remove) {
+            return "Remove;" + move.getX() + ";" + move.getY();
+        } else {
+            return "Pass";
+        }
+    }
 }

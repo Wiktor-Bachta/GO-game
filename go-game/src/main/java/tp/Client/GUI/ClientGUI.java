@@ -7,7 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tp.Client.Client;
 import tp.Client.ClientState;
-import tp.Game.Board;
+import tp.Game.StoneState;
 import tp.Game.GUI.BoardGUI;
 
 public class ClientGUI extends Application {
@@ -18,7 +18,6 @@ public class ClientGUI extends Application {
     private SidePanelGUI sidePanelGUI;
     private EndGamePanelGUI endGamePanelGUI;
     private ClientColor clientColor;
-    private Board board;
     private BorderPane layout;
 
     private Stage stage;
@@ -29,7 +28,8 @@ public class ClientGUI extends Application {
         client = new Client(this);
         client.run();
         choiceGUI = new ChoiceGUI(client);
-        Scene scene = new Scene(choiceGUI, 300, 200);
+        Scene scene = new Scene(choiceGUI, 400, 400);
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -37,7 +37,7 @@ public class ClientGUI extends Application {
     public void reset() {
         client.setCurrentSessionID(null);
         choiceGUI = new ChoiceGUI(client);
-        Scene scene = new Scene(choiceGUI, 300, 200);
+        Scene scene = new Scene(choiceGUI, 400, 400);
         stage.setScene(scene);
         stage.show();
     }
@@ -62,13 +62,12 @@ public class ClientGUI extends Application {
         this.boardGUI = boardGUI;
     }
 
-    public void displayBoard() {
+    public void displayBoard(int size) {
         Platform.runLater(() -> {
-            board = new Board(client);
-            boardGUI = board.getBoardGUI();
+            boardGUI = new BoardGUI(client, size);
             sidePanelGUI = new SidePanelGUI(client);
             layout = new BorderPane();
-            layout.setCenter(boardGUI.getPane());
+            layout.setCenter(boardGUI);
             layout.setRight(sidePanelGUI);
             if (clientColor == ClientColor.BLACK) {
                 sidePanelGUI.labelUpdateMove();
@@ -81,15 +80,19 @@ public class ClientGUI extends Application {
     }
 
     public void placePlayerMove(int x, int y) {
-        board.getSquares()[x][y].placeMove(x, y, ClientColor.getPlayerSquareState(clientColor));
+        boardGUI.placeMove(x, y, ClientColor.getPlayerStoneState(clientColor));
     }
 
     public void placeOpponentMove(int x, int y) {
-        board.getSquares()[x][y].placeMove(x, y, ClientColor.getOpponentSquareState(clientColor));
+        boardGUI.placeMove(x, y, ClientColor.getOpponentStoneState(clientColor));
+    }
+
+    public void placeMove(int x, int y, StoneState state) {
+        boardGUI.placeMove(x, y, state);
     }
 
     public void clearMove(int x, int y) {
-        board.getSquares()[x][y].clearMove(x, y);
+        boardGUI.clearMove(x, y);
     }
 
     public SidePanelGUI getSidePanelGUI() {
@@ -114,5 +117,13 @@ public class ClientGUI extends Application {
             endGamePanelGUI = new EndGamePanelGUI(client, result, playerPoints, opponentPoints);
             layout.setRight(endGamePanelGUI);
         });
+    }
+
+    public BoardGUI getBoardGUI() {
+        return boardGUI;
+    }
+
+    public void resetReplay() {
+        endGamePanelGUI.resetReplay();
     }
 }

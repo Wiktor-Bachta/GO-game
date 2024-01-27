@@ -21,7 +21,7 @@ public class ChatBox extends VBox {
         chatButton = new Button("Send message");
         messageField = new TextField();
         ScrollPane chatScrollPane = new ScrollPane(chat);
-        chatScrollPane.setPrefHeight(400);
+        chatScrollPane.setPrefHeight(300);
         getChildren().addAll(chatScrollPane, messageField, chatButton);
 
         chatButton.setOnAction(e -> {

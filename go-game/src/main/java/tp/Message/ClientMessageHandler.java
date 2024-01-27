@@ -3,6 +3,7 @@ package tp.Message;
 import tp.Client.Client;
 import tp.Client.ClientState;
 import tp.Client.GUI.ClientColor;
+import tp.Game.StoneState;
 
 import java.io.IOException;
 
@@ -52,9 +53,36 @@ public class ClientMessageHandler implements MessageHandler {
             case "EndGame":
                 handleEndGame(msgArray);
                 break;
+            case "Replay":
+                handleReplay(msgArray);
+                break;
             default:
                 System.out.println(msg);
                 System.out.println("Unknown message type");
+                break;
+        }
+    }
+
+    private void handleReplay(String[] msgArray) {
+        int moveNumber = Integer.parseInt(msgArray[1]);
+        switch (msgArray[2]) {
+            case "Move":
+                // black moves
+                if (moveNumber % 2 == 1) {
+                    client.getClientGUI().placeMove(Integer.parseInt(msgArray[3]), Integer.parseInt(msgArray[4]),
+                            StoneState.BLACK);
+                } else {
+                    client.getClientGUI().placeMove(Integer.parseInt(msgArray[3]), Integer.parseInt(msgArray[4]),
+                            StoneState.WHITE);
+                }
+                break;
+            case "Remove":
+                client.getClientGUI().clearMove(Integer.parseInt(msgArray[3]), Integer.parseInt(msgArray[4]));
+                break;
+            case "Pass":
+                break;
+            case "Done":
+                client.getClientGUI().resetReplay();
                 break;
         }
     }
@@ -113,15 +141,15 @@ public class ClientMessageHandler implements MessageHandler {
         switch (msgArray[1]) {
             case "Start":
                 client.setCurrentSessionID(msgArray[2]);
-
+                int size = Integer.parseInt(msgArray[4]);
                 if (msgArray[3].equals("Move")) {
                     client.getClientGUI().setClientColor(ClientColor.BLACK);
                     client.setState(ClientState.DOING_MOVE);
-                    client.getClientGUI().displayBoard();
+                    client.getClientGUI().displayBoard(size);
                 } else {
                     client.setState(ClientState.WAITING_FOR_MOVE);
                     client.getClientGUI().setClientColor(ClientColor.WHITE);
-                    client.getClientGUI().displayBoard();
+                    client.getClientGUI().displayBoard(size);
                 }
                 break;
             case "Wait":

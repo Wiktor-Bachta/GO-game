@@ -1,17 +1,15 @@
 package tp.Game.GUI;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import tp.Client.Client;
-import tp.Game.Square;
+import tp.Client.ClientState;
+import tp.Game.StoneState;
 
-public class BoardGUI {
+public class BoardGUI extends Pane {
 
     private Client client;
 
-    Pane pane;
     SquareGUI[][] squaresGUI;
     Line[] verticalLines;
     Line[] horizontaLines;
@@ -19,38 +17,64 @@ public class BoardGUI {
     int pixelSize;
     int squareSize;
 
-    public BoardGUI( int size, int pixelSize, Square[][] squares) {
-        //this.client = client;
-
-        this.pixelSize = pixelSize;
+    public BoardGUI(Client client, int size) {
         this.size = size;
-        squareSize = pixelSize / size;
-        pane = new Pane();
+        pixelSize = getPixelSize(size);
+        squareSize = getSqarePixelSize(size);
+        setPrefSize(760, 760);
+        this.client = client;
+
         squaresGUI = new SquareGUI[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                squares[i][j].setSquareGUI(new SquareGUI(i, j, squareSize, squares[i][j]));
-                squaresGUI[i][j] = squares[i][j].getSquareGUI();
-                pane.getChildren().add(squaresGUI[i][j]);
-                //pane.getChildren().add(squaresGUI[i][j].getCircle());
+                squaresGUI[i][j] = new SquareGUI(i, j, this, squareSize);
+                getChildren().add(squaresGUI[i][j]);
             }
         }
         verticalLines = new Line[size];
         horizontaLines = new Line[size];
-        for (int i = 0; i < size ; i++) {
-            verticalLines[i] = new Line((i + 1/2f) * squareSize, squareSize / 2, (i + 1/2f) * squareSize, pixelSize - squareSize / 2);
-            horizontaLines[i] = new Line(squareSize / 2, (i + 1/2f) * squareSize, pixelSize - squareSize / 2, (i + 1/2f) * squareSize);
-            pane.getChildren().addAll(verticalLines[i], horizontaLines[i]);
+        for (int i = 0; i < size; i++) {
+            verticalLines[i] = new Line((i + 1 / 2f) * squareSize, squareSize / 2, (i + 1 / 2f) * squareSize,
+                    pixelSize - squareSize / 2);
+            horizontaLines[i] = new Line(squareSize / 2, (i + 1 / 2f) * squareSize, pixelSize - squareSize / 2,
+                    (i + 1 / 2f) * squareSize);
+            getChildren().addAll(verticalLines[i], horizontaLines[i]);
         }
+
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                pane.getChildren().add(squares[i][j].getSquareGUI().getCircle());
+                getChildren().add(squaresGUI[i][j].getCircle());
             }
         }
     }
 
-    public Pane getPane() {
-        return pane;
+    public void sendMessage(String move) {
+        if (client.getState() == ClientState.DOING_MOVE) {
+            client.sendMessage("Move;" + move);
+        }
     }
 
+    public void placeMove(int x, int y, StoneState playerStoneState) {
+        squaresGUI[x][y].placeMove(StoneState.getColorByStoneState(playerStoneState));
+    }
+
+    public void clearMove(int x, int y) {
+        squaresGUI[x][y].clearMove();
+    }
+
+    public void reset() {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                squaresGUI[i][j].clearMove();
+            }
+        }
+    }
+
+    private int getPixelSize(int size) {
+        return getSqarePixelSize(size) * size;
+    }
+
+    private int getSqarePixelSize(int size) {
+        return 760 / size;
+    }
 }

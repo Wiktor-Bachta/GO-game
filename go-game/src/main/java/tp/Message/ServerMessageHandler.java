@@ -1,13 +1,15 @@
 package tp.Message;
 
 import tp.Database.DatabaseFacade;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 import tp.Server.Bot;
 import tp.Server.ClientHandler;
 import tp.Server.Session;
 
 import java.io.IOException;
 import java.util.List;
+
+import org.hibernate.type.IntegerType;
 
 public class ServerMessageHandler {
 
@@ -31,7 +33,7 @@ public class ServerMessageHandler {
         String msgType = msgArray[0];
         switch (msgType) {
             case "Launch":
-                handleLaunch(msgArray[1], msgArray[2]);
+                handleLaunch(msgArray);
                 break;
             case "Move":
                 handleMove(msgArray[1], msgArray[2]);
@@ -54,9 +56,25 @@ public class ServerMessageHandler {
             case "Disconnect":
                 handleDisconnect();
                 break;
+            case "Replay":
+                handleReplay(msgArray[1]);
+                break;
             default:
                 System.out.println("Unknown message type");
                 break;
+        }
+    }
+
+    private void handleReplay(String moveNumber) {
+        int number = Integer.parseInt(moveNumber);
+        if (number == 1) {
+            currentSession.loadGameHistory();
+        }
+        for (String move : currentSession.getMoves(number)) {
+            sendToPlayer("Replay;" + number + ";" + move);
+        }
+        if (currentSession.getMoves(number).isEmpty()) {
+            sendToPlayer("Replay;0;Done");
         }
     }
 
@@ -89,18 +107,21 @@ public class ServerMessageHandler {
         }
     }
 
-    private void handleLaunch(String gameType, String opponent) throws IOException {
+    private void handleLaunch(String[] msgArray) throws IOException {
+        String gameType = msgArray[1];
+        String opponent = msgArray[2];
         switch (gameType) {
             case "Create":
                 Session session = new Session(player);
                 String sessionID = session.getID();
+                int size = Integer.parseInt(msgArray[3]);
+                session.setBoardSize(size);
 
                 if ("bot".equals(opponent)) {
                     currentSession = session;
                     System.out.println("Play with bot");
                     sessions.add(session);
-                    sendToPlayer("Launch;Start;" + sessionID + ";Move");
-                    new Bot(sessionID).run();
+                    new Bot(sessionID, size).run();
                 } else {
                     System.out.println("Play with user");
                     sessions.add(session);
@@ -120,19 +141,20 @@ public class ServerMessageHandler {
                             s.addPlayer2(player);
                             currentSession = s;
                             s.getDatabaseFacade().open();
+                            size = s.getBoardSize();
 
                             // randomize who goes first - black always goes first
                             double random = Math.random();
 
                             if (random < 0.5) {
-                                sendToPlayer("Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait");
-                                sendToOpponent("Launch;" + "Start;" + sessionIDToJoin + ";" + "Move");
+                                sendToPlayer("Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait;" + size);
+                                sendToOpponent("Launch;" + "Start;" + sessionIDToJoin + ";" + "Move;" + size);
                             } else {
-                                sendToPlayer("Launch;" + "Start;" + sessionIDToJoin + ";" + "Move");
-                                sendToOpponent("Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait");
+                                sendToPlayer("Launch;" + "Start;" + sessionIDToJoin + ";" + "Move;" + size);
+                                sendToOpponent("Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait;" + size);
                                 currentSession.swapPlayers();
                             }
-
+                            s.createMoveAnalyzer();
                             System.out.println("Session joined");
                         } else {
                             System.out.println("Session is full");
@@ -160,7 +182,8 @@ public class ServerMessageHandler {
 
         boolean valid = currentSession.analyzeMove(x, y);
         if (valid) {
-            currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(), currentSession.getAndUpdateMoveCount());
+            currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(),
+                    currentSession.getAndUpdateMoveCount(), x, y);
             sendToPlayer("Move;Confirmed;" + x + ";" + y + ";");
             sendToOpponent("Move;New;" + x + ";" + y + ";");
         } else {
@@ -171,7 +194,7 @@ public class ServerMessageHandler {
     private void handlePass() {
         currentSession.skipTurn();
         currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(),
-        currentSession.getAndUpdateMoveCount());
+                currentSession.getAndUpdateMoveCount());
         if (currentSession.getPassEndsGame() == true) {
             sendToBothPlayers("Pass;End");
             currentSession.setPassEndsGame(false);
@@ -223,15 +246,15 @@ public class ServerMessageHandler {
 
     private int getPlayerPoints() {
         if (currentSession.getPlayer1() == player) {
-            return currentSession.getPoints(SquareState.BLACK);
+            return currentSession.getPoints(StoneState.BLACK);
         }
-        return currentSession.getPoints(SquareState.WHITE);
+        return currentSession.getPoints(StoneState.WHITE);
     }
 
     private int getOpponentPoints() {
         if (currentSession.getPlayer1() == player) {
-            return currentSession.getPoints(SquareState.WHITE);
+            return currentSession.getPoints(StoneState.WHITE);
         }
-        return currentSession.getPoints(SquareState.BLACK);
+        return currentSession.getPoints(StoneState.BLACK);
     }
 }

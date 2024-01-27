@@ -6,8 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import tp.Game.Square;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 import tp.Message.Message;
 import tp.Server.Session;
 
@@ -19,20 +18,22 @@ public class MoveAnalyzer {
 
     private Session session;
     private Stone[][] board;
-    private SquareState currentSquareState;
+    private int size;
+    private StoneState currentStoneState;
     private int killedLastMove = 0;
     private Stone stoneKilledLastMove;
     private boolean passEndsGame = false;
     private boolean onePlayerAgreedToEnd = false;
 
     public MoveAnalyzer(Session session) {
-        board = new Stone[19][19];
-        for (int i = 0; i < 19; i++) {
-            for (int j = 0; j < 19; j++) {
+        size = session.getBoardSize();
+        board = new Stone[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 board[i][j] = new Stone(i, j);
             }
         }
-        currentSquareState = SquareState.BLACK;
+        currentStoneState = StoneState.BLACK;
         this.session = session;
     }
 
@@ -40,11 +41,11 @@ public class MoveAnalyzer {
 
         Stone stoneToPlace = board[x][y];
 
-        if (stoneToPlace.getState() == SquareState.EMPTY) {
+        if (stoneToPlace.getState() == StoneState.EMPTY) {
             // TODO: send move to database
-            stoneToPlace.setState(currentSquareState);
-            ArrayList<Stone> playerNeigbours = getPlayerStoneNeighbours(stoneToPlace, currentSquareState);
-            stoneToPlace.setGroup(new Group(currentSquareState, stoneToPlace));
+            stoneToPlace.setState(currentStoneState);
+            ArrayList<Stone> playerNeigbours = getPlayerStoneNeighbours(stoneToPlace, currentStoneState);
+            stoneToPlace.setGroup(new Group(currentStoneState, stoneToPlace));
             for (Stone neighbour : playerNeigbours) {
                 neighbour.getGroup().mergeWith(stoneToPlace.getGroup());
             }
@@ -68,7 +69,7 @@ public class MoveAnalyzer {
                 return false;
             }
 
-            currentSquareState = getOppositeSquareState(currentSquareState);
+            currentStoneState = getOppositeStoneState(currentStoneState);
             passEndsGame = false;
             return true;
         }
@@ -79,17 +80,17 @@ public class MoveAnalyzer {
     private boolean koRuleViolated(Stone stoneToPlace) {
         if (killedLastMove == 1 && stoneToPlace.getX() == stoneKilledLastMove.getX()
                 && stoneToPlace.getY() == stoneKilledLastMove.getY()) {
-                    stoneToPlace.reset();
+            stoneToPlace.reset();
             return true;
         }
         return false;
     }
 
-    private SquareState getOppositeSquareState(SquareState state) {
-        if (state == SquareState.BLACK) {
-            return SquareState.WHITE;
+    private StoneState getOppositeStoneState(StoneState state) {
+        if (state == StoneState.BLACK) {
+            return StoneState.WHITE;
         }
-        return SquareState.BLACK;
+        return StoneState.BLACK;
     }
 
     private ArrayList<Stone> getStoneNeighbours(Stone stone) {
@@ -99,19 +100,19 @@ public class MoveAnalyzer {
         if (x != 0) {
             neigbours.add(board[x - 1][y]);
         }
-        if (x != 18) {
+        if (x != size - 1) {
             neigbours.add(board[x + 1][y]);
         }
         if (y != 0) {
             neigbours.add(board[x][y - 1]);
         }
-        if (y != 18) {
+        if (y != size - 1) {
             neigbours.add(board[x][y + 1]);
         }
         return neigbours;
     }
 
-    private ArrayList<Stone> getPlayerStoneNeighbours(Stone stone, SquareState state) {
+    private ArrayList<Stone> getPlayerStoneNeighbours(Stone stone, StoneState state) {
         ArrayList<Stone> neigbours = getStoneNeighbours(stone);
         ArrayList<Stone> matchingNeigbours = new ArrayList<Stone>();
         for (Stone neighbour : neigbours) {
@@ -122,11 +123,11 @@ public class MoveAnalyzer {
         return matchingNeigbours;
     }
 
-    private ArrayList<Stone> getOpponentStoneNeighbours(Stone stone, SquareState state) {
+    private ArrayList<Stone> getOpponentStoneNeighbours(Stone stone, StoneState state) {
         ArrayList<Stone> neigbours = getStoneNeighbours(stone);
         ArrayList<Stone> opponentNeigbours = new ArrayList<Stone>();
         for (Stone neighbour : neigbours) {
-            if (neighbour.getState() == getOppositeSquareState(state)) {
+            if (neighbour.getState() == getOppositeStoneState(state)) {
                 opponentNeigbours.add(neighbour);
             }
         }
@@ -137,7 +138,7 @@ public class MoveAnalyzer {
         ArrayList<Stone> neigbours = getStoneNeighbours(stone);
         ArrayList<Stone> emptyNeigbours = new ArrayList<Stone>();
         for (Stone neighbour : neigbours) {
-            if (neighbour.getState() == SquareState.EMPTY) {
+            if (neighbour.getState() == StoneState.EMPTY) {
                 emptyNeigbours.add(neighbour);
             }
         }
@@ -155,9 +156,9 @@ public class MoveAnalyzer {
 
     public Set<Group> getNeighbourGroups(Group group) {
         Set<Group> neighbours = new HashSet<>();
-        SquareState groupSquareState = group.getState();
+        StoneState groupStoneState = group.getState();
         for (Stone stone : group.getStones()) {
-            for (Stone opponentStone : getOpponentStoneNeighbours(stone, groupSquareState)) {
+            for (Stone opponentStone : getOpponentStoneNeighbours(stone, groupStoneState)) {
                 neighbours.add(opponentStone.getGroup());
             }
         }
@@ -170,6 +171,8 @@ public class MoveAnalyzer {
             stone.reset();
             stoneKilledLastMove = stone;
             try {
+                session.getDatabaseFacade().addRemoveToDatabase(session.getID(), session.getMoveCount() + 1,
+                        stone.getX(), stone.getY());
                 session.getPlayer1().getClientConnection()
                         .sendMessage(new Message("Move;Remove;" + stone.getX() + ";" + stone.getY()));
                 session.getPlayer2().getClientConnection()
@@ -196,12 +199,12 @@ public class MoveAnalyzer {
         onePlayerAgreedToEnd = val;
     }
 
-    public int calculatePoints(SquareState state) {
-        //TO DO: IMPLEMENT
+    public int calculatePoints(StoneState state) {
+        // TO DO: IMPLEMENT
         return 0;
     }
 
     public void skipTurn() {
-        currentSquareState = getOppositeSquareState(currentSquareState);
+        currentStoneState = getOppositeStoneState(currentStoneState);
     }
 }
