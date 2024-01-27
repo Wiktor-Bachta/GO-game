@@ -65,7 +65,7 @@ public class BotMessageHandler implements MessageHandler {
                 break;
             case "Invalid":
                 if (invalidInARow > 5) {
-                    bot.sendMessage("Resign");
+                    bot.sendMessage("Surrender");
                 } else {
                     bot.sendMessage("Move;" + bot.getMove());
                     invalidInARow++;
