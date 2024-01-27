@@ -7,7 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tp.Client.Client;
 import tp.Client.ClientState;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 import tp.Game.GUI.BoardGUI;
 
 public class ClientGUI extends Application {
@@ -80,14 +80,14 @@ public class ClientGUI extends Application {
     }
 
     public void placePlayerMove(int x, int y) {
-        boardGUI.placeMove(x, y, ClientColor.getPlayerSquareState(clientColor));
+        boardGUI.placeMove(x, y, ClientColor.getPlayerStoneState(clientColor));
     }
 
     public void placeOpponentMove(int x, int y) {
-        boardGUI.placeMove(x, y, ClientColor.getOpponentSquareState(clientColor));
+        boardGUI.placeMove(x, y, ClientColor.getOpponentStoneState(clientColor));
     }
 
-    public void placeMove(int x, int y, SquareState state) {
+    public void placeMove(int x, int y, StoneState state) {
         boardGUI.placeMove(x, y, state);
     }
 

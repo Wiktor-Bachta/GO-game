@@ -2,7 +2,7 @@ package tp.Server;
 
 import java.util.Random;
 
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 import tp.GameLogic.Stone;
 
 public class BotIntelligence {
@@ -30,20 +30,20 @@ public class BotIntelligence {
         do {
             x = random.nextInt(size);
             y = random.nextInt(size);
-        } while (board[x][y].getState() != SquareState.EMPTY);
+        } while (board[x][y].getState() != StoneState.EMPTY);
         return x + ";" + y;
     }
 
     public void placeOpponentMove(int x, int y) {
-        board[x][y].setState(SquareState.BLACK);
+        board[x][y].setState(StoneState.BLACK);
     }
 
     public void clearStone(int x, int y) {
-        board[x][y].setState(SquareState.EMPTY);
+        board[x][y].setState(StoneState.EMPTY);
     }
 
     public void placeBotMove(int x, int y) {
-        board[x][y].setState(SquareState.WHITE);
+        board[x][y].setState(StoneState.WHITE);
     }
 
 }

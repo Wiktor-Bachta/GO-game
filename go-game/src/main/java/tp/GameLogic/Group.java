@@ -1,19 +1,19 @@
 package tp.GameLogic;
 
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Group {
     private Set<Stone> stones = new HashSet<>();
-    private SquareState state;
+    private StoneState state;
 
-    public Group(SquareState state) {
+    public Group(StoneState state) {
         this.state = state;
     }
 
-    public Group(SquareState state, Stone stone) {
+    public Group(StoneState state, Stone stone) {
         this.state = state;
         stones.add(stone);
     }
@@ -26,11 +26,11 @@ public class Group {
         stones.add(stone);
     }
 
-    public SquareState getState() {
+    public StoneState getState() {
         return state;
     }
 
-    public void setState(SquareState state) {
+    public void setState(StoneState state) {
         this.state = state;
     }
 

@@ -3,7 +3,7 @@ package tp.Game.GUI;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 
 public class SquareGUI extends Rectangle {
     BoardGUI boardGUI;
@@ -47,8 +47,8 @@ public class SquareGUI extends Rectangle {
         return circle;
     }
 
-    public void placeMove(Color colorBySquareState) {
-        circle.setFill(colorBySquareState);
+    public void placeMove(Color colorByStoneState) {
+        circle.setFill(colorByStoneState);
         circle.setVisible(true);
     }
 

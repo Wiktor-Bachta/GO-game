@@ -1,23 +1,23 @@
 package tp.Client.GUI;
 
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 
 public enum ClientColor {
     BLACK,
     WHITE;
 
-    public static SquareState getPlayerSquareState(ClientColor color) {
+    public static StoneState getPlayerStoneState(ClientColor color) {
         if (color == ClientColor.BLACK) {
-            return SquareState.BLACK;
+            return StoneState.BLACK;
         }
-        return SquareState.WHITE;
+        return StoneState.WHITE;
     }
 
-    public static SquareState getOpponentSquareState(ClientColor color) {
+    public static StoneState getOpponentStoneState(ClientColor color) {
         if (color == ClientColor.BLACK) {
-            return SquareState.WHITE;
+            return StoneState.WHITE;
         }
-        return SquareState.BLACK;
+        return StoneState.BLACK;
     }
 }
 

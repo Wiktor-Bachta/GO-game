@@ -3,7 +3,7 @@ package tp.Message;
 import tp.Client.Client;
 import tp.Client.ClientState;
 import tp.Client.GUI.ClientColor;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 
 import java.io.IOException;
 
@@ -70,10 +70,10 @@ public class ClientMessageHandler implements MessageHandler {
                 // black moves
                 if (moveNumber % 2 == 1) {
                     client.getClientGUI().placeMove(Integer.parseInt(msgArray[3]), Integer.parseInt(msgArray[4]),
-                            SquareState.BLACK);
+                            StoneState.BLACK);
                 } else {
                     client.getClientGUI().placeMove(Integer.parseInt(msgArray[3]), Integer.parseInt(msgArray[4]),
-                            SquareState.WHITE);
+                            StoneState.WHITE);
                 }
                 break;
             case "Remove":

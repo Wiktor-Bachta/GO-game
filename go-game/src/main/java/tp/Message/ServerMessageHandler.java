@@ -1,7 +1,7 @@
 package tp.Message;
 
 import tp.Database.DatabaseFacade;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 import tp.Server.Bot;
 import tp.Server.ClientHandler;
 import tp.Server.Session;
@@ -246,15 +246,15 @@ public class ServerMessageHandler {
 
     private int getPlayerPoints() {
         if (currentSession.getPlayer1() == player) {
-            return currentSession.getPoints(SquareState.BLACK);
+            return currentSession.getPoints(StoneState.BLACK);
         }
-        return currentSession.getPoints(SquareState.WHITE);
+        return currentSession.getPoints(StoneState.WHITE);
     }
 
     private int getOpponentPoints() {
         if (currentSession.getPlayer1() == player) {
-            return currentSession.getPoints(SquareState.WHITE);
+            return currentSession.getPoints(StoneState.WHITE);
         }
-        return currentSession.getPoints(SquareState.BLACK);
+        return currentSession.getPoints(StoneState.BLACK);
     }
 }

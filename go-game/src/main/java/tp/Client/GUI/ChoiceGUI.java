@@ -22,6 +22,7 @@ public class ChoiceGUI extends VBox {
     private ChoiceBox boardSizeChoiceBox;
     private TextField idTextField;
     private Label idLabel;
+    private Label sizeLabel;
 
     public ChoiceGUI(Client client) {
         this.client = client;
@@ -38,6 +39,7 @@ public class ChoiceGUI extends VBox {
         boardSizeChoiceBox.setValue("19");
         idTextField = new TextField("Wpisz id");
         idLabel = new Label();
+        sizeLabel = new Label("Pick a size");
 
         createBotGameButton.setOnAction(e -> {
             client.sendMessage("Launch;Create;bot;" + boardSizeChoiceBox.getValue());
@@ -80,13 +82,13 @@ public class ChoiceGUI extends VBox {
 
     private void switchToPlayWithUser() {
         getChildren().clear();
-        getChildren().addAll(createPlayerGameButton, boardSizeChoiceBox, idLabel, joinGameButton, idTextField,
+        getChildren().addAll(sizeLabel, boardSizeChoiceBox, createPlayerGameButton, idLabel, joinGameButton, idTextField,
                 goBackButton);
     }
 
     private void switchToPlayWithBot() {
         getChildren().clear();
-        getChildren().addAll(createBotGameButton, boardSizeChoiceBox, goBackButton);
+        getChildren().addAll(sizeLabel, boardSizeChoiceBox, createBotGameButton, goBackButton);
     }
 
     private void switchToMainMenu() {

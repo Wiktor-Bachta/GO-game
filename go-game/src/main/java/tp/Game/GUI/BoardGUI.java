@@ -4,7 +4,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import tp.Client.Client;
 import tp.Client.ClientState;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 
 public class BoardGUI extends Pane {
 
@@ -54,8 +54,8 @@ public class BoardGUI extends Pane {
         }
     }
 
-    public void placeMove(int x, int y, SquareState playerSquareState) {
-        squaresGUI[x][y].placeMove(SquareState.getColorBySquareState(playerSquareState));
+    public void placeMove(int x, int y, StoneState playerStoneState) {
+        squaresGUI[x][y].placeMove(StoneState.getColorByStoneState(playerStoneState));
     }
 
     public void clearMove(int x, int y) {

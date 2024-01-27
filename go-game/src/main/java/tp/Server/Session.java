@@ -1,7 +1,7 @@
 package tp.Server;
 
 import tp.Database.DatabaseFacade;
-import tp.Game.SquareState;
+import tp.Game.StoneState;
 import tp.GameLogic.MoveAnalyzer;
 import tp.Database.dto.GameHistory;
 import tp.Database.dto.MoveType;
@@ -93,7 +93,7 @@ public class Session {
         moveAnalyzer.setOnePlayerAgreedToEnd(val);
     }
 
-    public int getPoints(SquareState state) {
+    public int getPoints(StoneState state) {
         return moveAnalyzer.calculatePoints(state);
     }
 
