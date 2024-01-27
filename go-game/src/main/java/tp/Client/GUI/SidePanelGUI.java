@@ -1,5 +1,7 @@
 package tp.Client.GUI;
 
+import javax.swing.GroupLayout.Alignment;
+
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -23,7 +25,7 @@ public class SidePanelGUI extends VBox {
     public SidePanelGUI(Client client) {
         this.client = client;
 
-        setAlignment(getAlignment());
+        setMinWidth(240);
         setSpacing(5);
         setPadding(new Insets(10, 10, 10, 10));
 

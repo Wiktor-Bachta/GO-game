@@ -29,6 +29,7 @@ public class ClientGUI extends Application {
         client.run();
         choiceGUI = new ChoiceGUI(client);
         Scene scene = new Scene(choiceGUI, 300, 200);
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

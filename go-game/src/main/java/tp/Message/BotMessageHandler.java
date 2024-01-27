@@ -18,7 +18,7 @@ public class BotMessageHandler implements MessageHandler {
     public void handleMessage(Message message) throws IOException {
         try {
             // delay
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

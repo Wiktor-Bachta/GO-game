@@ -18,6 +18,7 @@ public class BoardGUI extends Pane {
     int squareSize = 40;
 
     public BoardGUI(Client client) {
+        setPrefSize(760, 760);
         this.client = client;
 
         squaresGUI = new SquareGUI[size][size];
