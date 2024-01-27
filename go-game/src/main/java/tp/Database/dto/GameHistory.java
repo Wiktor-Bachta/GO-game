@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnTransformer;
+
 import tp.Database.dto.MoveType;
 
 @Entity
@@ -22,6 +25,7 @@ public class GameHistory {
     private int moveNumber;
 
     @Enumerated(EnumType.STRING)
+    @ColumnTransformer(write="?::movetype")
     private MoveType moveType;
 
     private int x;

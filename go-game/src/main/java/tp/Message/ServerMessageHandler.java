@@ -99,7 +99,7 @@ public class ServerMessageHandler {
                     currentSession = session;
                     System.out.println("Play with bot");
                     sessions.add(session);
-                    sendToPlayer("Launch;Start;" + sessionID + ";Move");
+                    // sendToPlayer("Launch;Start;" + sessionID + ";Move");
                     new Bot(sessionID).run();
                 } else {
                     System.out.println("Play with user");
@@ -160,7 +160,8 @@ public class ServerMessageHandler {
 
         boolean valid = currentSession.analyzeMove(x, y);
         if (valid) {
-            currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(), currentSession.getAndUpdateMoveCount());
+            currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(),
+                    currentSession.getAndUpdateMoveCount(), x, y);
             sendToPlayer("Move;Confirmed;" + x + ";" + y + ";");
             sendToOpponent("Move;New;" + x + ";" + y + ";");
         } else {
@@ -171,7 +172,7 @@ public class ServerMessageHandler {
     private void handlePass() {
         currentSession.skipTurn();
         currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(),
-        currentSession.getAndUpdateMoveCount());
+                currentSession.getAndUpdateMoveCount());
         if (currentSession.getPassEndsGame() == true) {
             sendToBothPlayers("Pass;End");
             currentSession.setPassEndsGame(false);
