@@ -6,6 +6,8 @@ import javax.persistence.Persistence;
 
 import tp.Database.dto.GameHistory;
 import tp.Database.dto.MoveType;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseFacade {
 
@@ -27,6 +29,7 @@ public class DatabaseFacade {
     public void addMoveToDatabase(String gameID, int moveNumber) {
         EntityManager em = emf.createEntityManager();
 
+
         em.getTransaction().begin();
         GameHistory newMove = new GameHistory(gameID, moveNumber, MoveType.Pass);
         em.persist(newMove);
@@ -35,8 +38,13 @@ public class DatabaseFacade {
         em.close();
     }
 
+
+
     public void open() {
-        emf = Persistence.createEntityManagerFactory("default");
+        Map<String, String> env = new HashMap<>();
+        env.put("javax.persistence.jdbc.user", System.getenv("GoGameHistoryDataBaseUser"));
+        env.put("javax.persistence.jdbc.password", System.getenv("GoGameHistoryDataBasePasswor"));
+        emf = Persistence.createEntityManagerFactory("default", env);
     }
 
     public void close() {

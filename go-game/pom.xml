@@ -20,10 +20,14 @@
 
   <dependencies>
     <dependency>
-        <groupId>org.hibernate.orm</groupId>
+      <groupId>javax.persistence</groupId>
+      <artifactId>javax.persistence-api</artifactId>
+      <version>2.2</version>
+    </dependency>
+    <dependency>
+        <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
-        <version>6.4.2.Final</version>
-        <type>pom</type>
+        <version>5.6.15.Final</version>
     </dependency>
     <dependency>
         <groupId>org.hibernate</groupId>

@@ -99,7 +99,7 @@ public class ServerMessageHandler {
                     currentSession = session;
                     System.out.println("Play with bot");
                     sessions.add(session);
-                    //sendToPlayer("Launch;Start;" + sessionID + ";Move");
+                    sendToPlayer("Launch;Start;" + sessionID + ";Move");
                     new Bot(sessionID).run();
                 } else {
                     System.out.println("Play with user");
