@@ -9,6 +9,8 @@ import tp.Server.Session;
 import java.io.IOException;
 import java.util.List;
 
+import org.hibernate.type.IntegerType;
+
 public class ServerMessageHandler {
 
     List<Session> sessions;
@@ -31,7 +33,7 @@ public class ServerMessageHandler {
         String msgType = msgArray[0];
         switch (msgType) {
             case "Launch":
-                handleLaunch(msgArray[1], msgArray[2]);
+                handleLaunch(msgArray);
                 break;
             case "Move":
                 handleMove(msgArray[1], msgArray[2]);
@@ -105,18 +107,21 @@ public class ServerMessageHandler {
         }
     }
 
-    private void handleLaunch(String gameType, String opponent) throws IOException {
+    private void handleLaunch(String[] msgArray) throws IOException {
+        String gameType = msgArray[1];
+        String opponent = msgArray[2];
         switch (gameType) {
             case "Create":
                 Session session = new Session(player);
                 String sessionID = session.getID();
+                int size = Integer.parseInt(msgArray[3]);
+                session.setBoardSize(size);
 
                 if ("bot".equals(opponent)) {
                     currentSession = session;
                     System.out.println("Play with bot");
                     sessions.add(session);
-                    // sendToPlayer("Launch;Start;" + sessionID + ";Move");
-                    new Bot(sessionID).run();
+                    new Bot(sessionID, size).run();
                 } else {
                     System.out.println("Play with user");
                     sessions.add(session);
@@ -136,19 +141,20 @@ public class ServerMessageHandler {
                             s.addPlayer2(player);
                             currentSession = s;
                             s.getDatabaseFacade().open();
+                            size = s.getBoardSize();
 
                             // randomize who goes first - black always goes first
                             double random = Math.random();
 
                             if (random < 0.5) {
-                                sendToPlayer("Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait");
-                                sendToOpponent("Launch;" + "Start;" + sessionIDToJoin + ";" + "Move");
+                                sendToPlayer("Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait;" + size);
+                                sendToOpponent("Launch;" + "Start;" + sessionIDToJoin + ";" + "Move;" + size);
                             } else {
-                                sendToPlayer("Launch;" + "Start;" + sessionIDToJoin + ";" + "Move");
-                                sendToOpponent("Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait");
+                                sendToPlayer("Launch;" + "Start;" + sessionIDToJoin + ";" + "Move;" + size);
+                                sendToOpponent("Launch;" + "Start;" + sessionIDToJoin + ";" + "Wait;" + size);
                                 currentSession.swapPlayers();
                             }
-
+                            s.createMoveAnalyzer();
                             System.out.println("Session joined");
                         } else {
                             System.out.println("Session is full");

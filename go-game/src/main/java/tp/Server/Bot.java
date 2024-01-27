@@ -16,9 +16,9 @@ public class Bot {
     private ServerHandler serverHandler;
     private BotIntelligence botIntelligence;
 
-    public Bot(String sessionID) {
+    public Bot(String sessionID, int size) {
         this.sessionID = sessionID;
-        botIntelligence = new BotIntelligence();
+        botIntelligence = new BotIntelligence(size);
         try {
             this.serverConnection = new ServerConnection("localhost", 8000);
         } catch (IOException e) {

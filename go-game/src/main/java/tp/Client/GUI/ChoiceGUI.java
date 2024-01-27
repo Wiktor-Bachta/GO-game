@@ -3,6 +3,7 @@ package tp.Client.GUI;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -14,9 +15,11 @@ public class ChoiceGUI extends VBox {
     private Button playWithBotButton;
     private Button playWithUserButton;
     private Button exitButton;
-    private Button createGameButton;
+    private Button createPlayerGameButton;
+    private Button createBotGameButton;
     private Button joinGameButton;
     private Button goBackButton;
+    private ChoiceBox boardSizeChoiceBox;
     private TextField idTextField;
     private Label idLabel;
 
@@ -26,14 +29,22 @@ public class ChoiceGUI extends VBox {
         playWithBotButton = new Button("Play with bot");
         playWithUserButton = new Button("Play with user");
         exitButton = new Button("Exit");
-        createGameButton = new Button("Create game");
+        createPlayerGameButton = new Button("Create game");
+        createBotGameButton = new Button("Create game");
         joinGameButton = new Button("Join game");
         goBackButton = new Button("Go Back");
+        boardSizeChoiceBox = new ChoiceBox<>();
+        boardSizeChoiceBox.getItems().addAll("19", "13", "9");
+        boardSizeChoiceBox.setValue("19");
         idTextField = new TextField("Wpisz id");
         idLabel = new Label();
 
+        createBotGameButton.setOnAction(e -> {
+            client.sendMessage("Launch;Create;bot;" + boardSizeChoiceBox.getValue());
+        });
+
         playWithBotButton.setOnAction(e -> {
-            client.sendMessage("Launch;Create;bot");
+            switchToPlayWithBot();
         });
 
         playWithUserButton.setOnAction(e -> {
@@ -46,8 +57,8 @@ public class ChoiceGUI extends VBox {
             System.exit(0);
         });
 
-        createGameButton.setOnAction(e -> {
-            client.sendMessage("Launch;Create;user");
+        createPlayerGameButton.setOnAction(e -> {
+            client.sendMessage("Launch;Create;user;" + boardSizeChoiceBox.getValue());
         });
 
         joinGameButton.setOnAction(e -> {
@@ -69,7 +80,13 @@ public class ChoiceGUI extends VBox {
 
     private void switchToPlayWithUser() {
         getChildren().clear();
-        getChildren().addAll(createGameButton, idLabel, joinGameButton, idTextField, goBackButton);
+        getChildren().addAll(createPlayerGameButton, boardSizeChoiceBox, idLabel, joinGameButton, idTextField,
+                goBackButton);
+    }
+
+    private void switchToPlayWithBot() {
+        getChildren().clear();
+        getChildren().addAll(createBotGameButton, boardSizeChoiceBox, goBackButton);
     }
 
     private void switchToMainMenu() {

@@ -19,6 +19,8 @@ public class EndGamePanelGUI extends VBox {
     private int replayMoveNumber;
 
     public EndGamePanelGUI(Client client, String result, int playerPoints, int opponentPoints) {
+
+        setMaxWidth(240);
         setSpacing(5);
         setMinWidth(240);
         setPadding(new Insets(10, 10, 10, 10));
@@ -26,6 +28,7 @@ public class EndGamePanelGUI extends VBox {
         this.client = client;
         gameResultLabel = new Label(result);
         gameResultLabel.setFont(Font.font(20));
+        gameResultLabel.setWrapText(true);
         scoreLabel = new Label("Your score: " + playerPoints + "\nOpponent score: " + opponentPoints);
         exitButton = new Button("Exit");
         replayButton = new Button("Replay");

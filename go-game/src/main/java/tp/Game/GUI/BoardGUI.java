@@ -13,18 +13,21 @@ public class BoardGUI extends Pane {
     SquareGUI[][] squaresGUI;
     Line[] verticalLines;
     Line[] horizontaLines;
-    int size = 19;
-    int pixelSize = 19 * 40;
-    int squareSize = 40;
+    int size;
+    int pixelSize;
+    int squareSize;
 
-    public BoardGUI(Client client) {
+    public BoardGUI(Client client, int size) {
+        this.size = size;
+        pixelSize = getPixelSize(size);
+        squareSize = getSqarePixelSize(size);
         setPrefSize(760, 760);
         this.client = client;
 
         squaresGUI = new SquareGUI[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                squaresGUI[i][j] = new SquareGUI(i, j, this);
+                squaresGUI[i][j] = new SquareGUI(i, j, this, squareSize);
                 getChildren().add(squaresGUI[i][j]);
             }
         }
@@ -65,5 +68,13 @@ public class BoardGUI extends Pane {
                 squaresGUI[i][j].clearMove();
             }
         }
+    }
+
+    private int getPixelSize(int size) {
+        return getSqarePixelSize(size) * size;
+    }
+
+    private int getSqarePixelSize(int size) {
+        return 760 / size;
     }
 }

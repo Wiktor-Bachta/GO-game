@@ -141,15 +141,15 @@ public class ClientMessageHandler implements MessageHandler {
         switch (msgArray[1]) {
             case "Start":
                 client.setCurrentSessionID(msgArray[2]);
-
+                int size = Integer.parseInt(msgArray[4]);
                 if (msgArray[3].equals("Move")) {
                     client.getClientGUI().setClientColor(ClientColor.BLACK);
                     client.setState(ClientState.DOING_MOVE);
-                    client.getClientGUI().displayBoard();
+                    client.getClientGUI().displayBoard(size);
                 } else {
                     client.setState(ClientState.WAITING_FOR_MOVE);
                     client.getClientGUI().setClientColor(ClientColor.WHITE);
-                    client.getClientGUI().displayBoard();
+                    client.getClientGUI().displayBoard(size);
                 }
                 break;
             case "Wait":

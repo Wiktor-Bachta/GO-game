@@ -28,7 +28,7 @@ public class ClientGUI extends Application {
         client = new Client(this);
         client.run();
         choiceGUI = new ChoiceGUI(client);
-        Scene scene = new Scene(choiceGUI, 300, 200);
+        Scene scene = new Scene(choiceGUI, 400, 400);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -37,7 +37,7 @@ public class ClientGUI extends Application {
     public void reset() {
         client.setCurrentSessionID(null);
         choiceGUI = new ChoiceGUI(client);
-        Scene scene = new Scene(choiceGUI, 300, 200);
+        Scene scene = new Scene(choiceGUI, 400, 400);
         stage.setScene(scene);
         stage.show();
     }
@@ -62,9 +62,9 @@ public class ClientGUI extends Application {
         this.boardGUI = boardGUI;
     }
 
-    public void displayBoard() {
+    public void displayBoard(int size) {
         Platform.runLater(() -> {
-            boardGUI = new BoardGUI(client);
+            boardGUI = new BoardGUI(client, size);
             sidePanelGUI = new SidePanelGUI(client);
             layout = new BorderPane();
             layout.setCenter(boardGUI);

@@ -19,14 +19,26 @@ public class Session {
     private int moveCount = 0;
     List<GameHistory> gameHistory;
     private MoveAnalyzer moveAnalyzer;
+    private int boardSize;
 
     private boolean ableToJoin = true;
 
     public Session(ClientHandler player1) {
         this.ID = generateID();
         this.player1 = player1;
-        this.moveAnalyzer = new MoveAnalyzer(this);
         databaseFacade = new DatabaseFacade();
+    }
+
+    public void setBoardSize(int size) {
+        this.boardSize = size;
+    }
+
+    public void createMoveAnalyzer() {
+        moveAnalyzer = new MoveAnalyzer(this);
+    }
+
+    public int getBoardSize() {
+        return boardSize;
     }
 
     private String generateID() {

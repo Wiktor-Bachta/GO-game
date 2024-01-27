@@ -11,15 +11,15 @@ public class SquareGUI extends Rectangle {
     int y;
     Circle circle;
 
-    public SquareGUI(int x, int y, BoardGUI boardGUI) {
+    public SquareGUI(int x, int y, BoardGUI boardGUI, int size) {
         this.x = x;
         this.y = y;
         setFill(Color.SANDYBROWN);
-        setWidth(40);
-        setHeight(40);
-        setX(40 * x);
-        setY(40 * y);
-        setCircle(x * 40 + 40 / 2, y * 40 + 40 / 2);
+        setWidth(size);
+        setHeight(size);
+        setX(size * x);
+        setY(size * y);
+        setCircle(size / 4, x * size + size / 2, y * size + size / 2);
         setOnMouseClicked(event -> {
             boardGUI.sendMessage(x + ";" + y);
         });
@@ -36,8 +36,8 @@ public class SquareGUI extends Rectangle {
         setFill(color);
     }
 
-    public void setCircle(int x, int y) {
-        circle = new Circle(10);
+    public void setCircle(int radius, int x, int y) {
+        circle = new Circle(radius);
         circle.setVisible(false);
         circle.setCenterX(x);
         circle.setCenterY(y);

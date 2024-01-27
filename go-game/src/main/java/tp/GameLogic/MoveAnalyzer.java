@@ -18,6 +18,7 @@ public class MoveAnalyzer {
 
     private Session session;
     private Stone[][] board;
+    private int size;
     private SquareState currentSquareState;
     private int killedLastMove = 0;
     private Stone stoneKilledLastMove;
@@ -25,9 +26,10 @@ public class MoveAnalyzer {
     private boolean onePlayerAgreedToEnd = false;
 
     public MoveAnalyzer(Session session) {
-        board = new Stone[19][19];
-        for (int i = 0; i < 19; i++) {
-            for (int j = 0; j < 19; j++) {
+        size = session.getBoardSize();
+        board = new Stone[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 board[i][j] = new Stone(i, j);
             }
         }
@@ -98,13 +100,13 @@ public class MoveAnalyzer {
         if (x != 0) {
             neigbours.add(board[x - 1][y]);
         }
-        if (x != 18) {
+        if (x != size - 1) {
             neigbours.add(board[x + 1][y]);
         }
         if (y != 0) {
             neigbours.add(board[x][y - 1]);
         }
-        if (y != 18) {
+        if (y != size - 1) {
             neigbours.add(board[x][y + 1]);
         }
         return neigbours;
