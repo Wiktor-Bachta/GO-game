@@ -48,5 +48,7 @@ public class Server {
         System.out.println("Server stop");
     }
 
-
+    public boolean isRunning() {
+        return running;
+    }
 }

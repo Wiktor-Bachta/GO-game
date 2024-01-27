@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnTransformer;
-
 import tp.Database.dto.MoveType;
 
 @Entity

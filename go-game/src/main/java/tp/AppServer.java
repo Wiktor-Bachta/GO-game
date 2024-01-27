@@ -11,6 +11,9 @@ public class AppServer {
         server.run();
 
         server.stop();
+    }
 
+    public static void terminate() {
+        System.exit(0);
     }
 }

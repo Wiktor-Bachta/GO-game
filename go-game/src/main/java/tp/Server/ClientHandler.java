@@ -53,7 +53,15 @@ public class ClientHandler implements Runnable {
         gameRunning = false;
     }
 
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
+
     public ClientConnection getClientConnection() {
+        return clientConnection;
+    }
+
+    public ClientConnection getServerConnection() {
         return clientConnection;
     }
 }
