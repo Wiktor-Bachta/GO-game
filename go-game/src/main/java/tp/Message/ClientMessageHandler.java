@@ -3,6 +3,7 @@ package tp.Message;
 import tp.Client.Client;
 import tp.Client.ClientState;
 import tp.Client.GUI.ClientColor;
+import tp.Game.SquareState;
 
 import java.io.IOException;
 
@@ -52,9 +53,36 @@ public class ClientMessageHandler implements MessageHandler {
             case "EndGame":
                 handleEndGame(msgArray);
                 break;
+            case "Replay":
+                handleReplay(msgArray);
+                break;
             default:
                 System.out.println(msg);
                 System.out.println("Unknown message type");
+                break;
+        }
+    }
+
+    private void handleReplay(String[] msgArray) {
+        int moveNumber = Integer.parseInt(msgArray[1]);
+        switch (msgArray[2]) {
+            case "Move":
+                // black moves
+                if (moveNumber % 2 == 1) {
+                    client.getClientGUI().placeMove(Integer.parseInt(msgArray[3]), Integer.parseInt(msgArray[4]),
+                            SquareState.BLACK);
+                } else {
+                    client.getClientGUI().placeMove(Integer.parseInt(msgArray[3]), Integer.parseInt(msgArray[4]),
+                            SquareState.WHITE);
+                }
+                break;
+            case "Remove":
+                client.getClientGUI().clearMove(Integer.parseInt(msgArray[3]), Integer.parseInt(msgArray[4]));
+                break;
+            case "Pass":
+                break;
+            case "Done":
+                client.getClientGUI().resetReplay();
                 break;
         }
     }

@@ -54,9 +54,25 @@ public class ServerMessageHandler {
             case "Disconnect":
                 handleDisconnect();
                 break;
+            case "Replay":
+                handleReplay(msgArray[1]);
+                break;
             default:
                 System.out.println("Unknown message type");
                 break;
+        }
+    }
+
+    private void handleReplay(String moveNumber) {
+        int number = Integer.parseInt(moveNumber);
+        if (number == 1) {
+            currentSession.loadGameHistory();
+        }
+        for (String move : currentSession.getMoves(number)) {
+            sendToPlayer("Replay;" + number + ";" + move);
+        }
+        if (currentSession.getMoves(number).isEmpty()) {
+            sendToPlayer("Replay;0;Done");
         }
     }
 

@@ -3,23 +3,25 @@ package tp.Game.GUI;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import tp.Game.Square;
-import tp.Message.Message;
+import tp.Game.SquareState;
 
 public class SquareGUI extends Rectangle {
-    Square square;
+    BoardGUI boardGUI;
+    int x;
+    int y;
     Circle circle;
 
-    public SquareGUI(int x, int y, int size, Square sqaure) {
-        this.square = sqaure;
+    public SquareGUI(int x, int y, BoardGUI boardGUI) {
+        this.x = x;
+        this.y = y;
         setFill(Color.SANDYBROWN);
-        setWidth(size);
-        setHeight(size);
-        setX(size * x);
-        setY(size * y);
-        setCircle(x * size + size / 2, y * size + size / 2);
+        setWidth(40);
+        setHeight(40);
+        setX(40 * x);
+        setY(40 * y);
+        setCircle(x * 40 + 40 / 2, y * 40 + 40 / 2);
         setOnMouseClicked(event -> {
-            sqaure.sendMessage();
+            boardGUI.sendMessage(x + ";" + y);
         });
         setOnMouseEntered(event -> {
             setFill(Color.DARKGRAY);
@@ -53,4 +55,5 @@ public class SquareGUI extends Rectangle {
     public void clearMove() {
         circle.setVisible(false);
     }
+
 }

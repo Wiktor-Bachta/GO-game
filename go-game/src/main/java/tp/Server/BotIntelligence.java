@@ -37,7 +37,7 @@ public class BotIntelligence {
     }
 
     public void clearStone(int x, int y) {
-        board[x][y].reset();
+        board[x][y].setState(SquareState.EMPTY);
     }
 
     public void placeBotMove(int x, int y) {

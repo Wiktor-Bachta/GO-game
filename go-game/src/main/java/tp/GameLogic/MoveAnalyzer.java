@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import tp.Game.Square;
 import tp.Game.SquareState;
 import tp.Message.Message;
 import tp.Server.Session;
@@ -79,7 +78,7 @@ public class MoveAnalyzer {
     private boolean koRuleViolated(Stone stoneToPlace) {
         if (killedLastMove == 1 && stoneToPlace.getX() == stoneKilledLastMove.getX()
                 && stoneToPlace.getY() == stoneKilledLastMove.getY()) {
-                    stoneToPlace.reset();
+            stoneToPlace.reset();
             return true;
         }
         return false;
@@ -170,6 +169,8 @@ public class MoveAnalyzer {
             stone.reset();
             stoneKilledLastMove = stone;
             try {
+                session.getDatabaseFacade().addRemoveToDatabase(session.getID(), session.getMoveCount() + 1,
+                        stone.getX(), stone.getY());
                 session.getPlayer1().getClientConnection()
                         .sendMessage(new Message("Move;Remove;" + stone.getX() + ";" + stone.getY()));
                 session.getPlayer2().getClientConnection()
@@ -197,7 +198,7 @@ public class MoveAnalyzer {
     }
 
     public int calculatePoints(SquareState state) {
-        //TO DO: IMPLEMENT
+        // TO DO: IMPLEMENT
         return 0;
     }
 

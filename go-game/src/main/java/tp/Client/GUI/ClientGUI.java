@@ -7,7 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tp.Client.Client;
 import tp.Client.ClientState;
-import tp.Game.Board;
+import tp.Game.SquareState;
 import tp.Game.GUI.BoardGUI;
 
 public class ClientGUI extends Application {
@@ -18,7 +18,6 @@ public class ClientGUI extends Application {
     private SidePanelGUI sidePanelGUI;
     private EndGamePanelGUI endGamePanelGUI;
     private ClientColor clientColor;
-    private Board board;
     private BorderPane layout;
 
     private Stage stage;
@@ -64,11 +63,10 @@ public class ClientGUI extends Application {
 
     public void displayBoard() {
         Platform.runLater(() -> {
-            board = new Board(client);
-            boardGUI = board.getBoardGUI();
+            boardGUI = new BoardGUI(client);
             sidePanelGUI = new SidePanelGUI(client);
             layout = new BorderPane();
-            layout.setCenter(boardGUI.getPane());
+            layout.setCenter(boardGUI);
             layout.setRight(sidePanelGUI);
             if (clientColor == ClientColor.BLACK) {
                 sidePanelGUI.labelUpdateMove();
@@ -81,15 +79,19 @@ public class ClientGUI extends Application {
     }
 
     public void placePlayerMove(int x, int y) {
-        board.getSquares()[x][y].placeMove(x, y, ClientColor.getPlayerSquareState(clientColor));
+        boardGUI.placeMove(x, y, ClientColor.getPlayerSquareState(clientColor));
     }
 
     public void placeOpponentMove(int x, int y) {
-        board.getSquares()[x][y].placeMove(x, y, ClientColor.getOpponentSquareState(clientColor));
+        boardGUI.placeMove(x, y, ClientColor.getOpponentSquareState(clientColor));
+    }
+
+    public void placeMove(int x, int y, SquareState state) {
+        boardGUI.placeMove(x, y, state);
     }
 
     public void clearMove(int x, int y) {
-        board.getSquares()[x][y].clearMove(x, y);
+        boardGUI.clearMove(x, y);
     }
 
     public SidePanelGUI getSidePanelGUI() {
@@ -114,5 +116,13 @@ public class ClientGUI extends Application {
             endGamePanelGUI = new EndGamePanelGUI(client, result, playerPoints, opponentPoints);
             layout.setRight(endGamePanelGUI);
         });
+    }
+
+    public BoardGUI getBoardGUI() {
+        return boardGUI;
+    }
+
+    public void resetReplay() {
+        endGamePanelGUI.resetReplay();
     }
 }
