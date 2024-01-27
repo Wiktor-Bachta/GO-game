@@ -11,7 +11,8 @@ import tp.Database.dto.MoveType;
 
 @Entity
 @Table(name = "GameHistory")
-public class GameHistory {
+public class
+GameHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
