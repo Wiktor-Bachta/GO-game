@@ -58,6 +58,7 @@ public class DatabaseFacade {
     }
 
     public List<GameHistory> getGameHistory(String sessionID) {
+        open();
         List<GameHistory> gameHistoryList = new ArrayList<>();
         EntityManager em = emf.createEntityManager();
         TypedQuery<GameHistory> query = em.createQuery("SELECT gh FROM GameHistory gh WHERE gh.gameID = :sessionID",
