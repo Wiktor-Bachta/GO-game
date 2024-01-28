@@ -201,7 +201,10 @@ public class MoveAnalyzer {
     }
 
     public int calculatePoints(StoneState state) {
-        int result = getPoints(getEmptyGroups(), state);
+        int result = 0;
+        for (Group emptyGroup : getEmptyGroups()) {
+            result += getPoints(emptyGroup, state);
+        }
         for (Stone stone : getEmptyStones()) {
             stone.reset();
         }
@@ -226,20 +229,15 @@ public class MoveAnalyzer {
         return new ArrayList<Group>(emptyGroups);
     }
 
-    private int getPoints(List<Group> emptyGroups, StoneState state) {
-        int result = 0;
-        for (Group emptyGroup : emptyGroups) {
-            result += emptyGroup.getStones().size();
-            outerloop: for (Stone stone : emptyGroup.getStones()) {
-                for (Stone neighbour : getStoneNeighbours(stone)) {
-                    if (neighbour.getState() == getOppositeStoneState(state)) {
-                        result -= emptyGroup.getStones().size();
-                        break outerloop;
-                    }
+    private int getPoints(Group emptyGroup, StoneState state) {
+        for (Stone stone : emptyGroup.getStones()) {
+            for (Stone neighbour : getStoneNeighbours(stone)) {
+                if (neighbour.getState() == getOppositeStoneState(state)) {
+                    return 0;
                 }
             }
         }
-        return result;
+        return emptyGroup.getStones().size();
     }
 
     private List<Stone> getEmptyStones() {

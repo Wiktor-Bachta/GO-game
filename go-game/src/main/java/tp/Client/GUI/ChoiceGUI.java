@@ -82,8 +82,8 @@ public class ChoiceGUI extends VBox {
 
     private void switchToPlayWithUser() {
         getChildren().clear();
-        getChildren().addAll(sizeLabel, boardSizeChoiceBox, createPlayerGameButton, idLabel, joinGameButton, idTextField,
-                goBackButton);
+        getChildren().addAll(sizeLabel, boardSizeChoiceBox, createPlayerGameButton, idLabel, idTextField,
+                joinGameButton, goBackButton);
     }
 
     private void switchToPlayWithBot() {
