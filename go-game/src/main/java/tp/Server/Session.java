@@ -154,4 +154,8 @@ public class Session {
     public void setMoveAnalyzer(MoveAnalyzer moveAnalyzer) {
         this.moveAnalyzer = moveAnalyzer;
     }
+
+    public void setCurrentStoneState(StoneState state) {
+        moveAnalyzer.setCurrentStoneState(state);
+    }
 }

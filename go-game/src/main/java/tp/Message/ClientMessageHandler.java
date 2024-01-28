@@ -201,7 +201,8 @@ public class ClientMessageHandler implements MessageHandler {
                 client.nextState();
                 break;
             case "End":
-                client.getClientGUI().showEndGameProposition(0, 0);
+                client.getClientGUI().showEndGameProposition(Integer.parseInt(msgArray[2]),
+                        Integer.parseInt(msgArray[3]));
                 client.setState(ClientState.WAITING_FOR_MOVE);
                 break;
         }
