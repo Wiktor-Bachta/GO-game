@@ -35,9 +35,11 @@ public class Group {
     }
 
     public void mergeWith(Group group) {
-        for (Stone stone : group.getStones()) {
-            stones.add(stone);
-            stone.setGroup(this);
+        if (group != null) {
+            for (Stone stone : group.getStones()) {
+                stones.add(stone);
+                stone.setGroup(this);
+            }
         }
     }
 }

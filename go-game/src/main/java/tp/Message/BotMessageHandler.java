@@ -90,7 +90,6 @@ public class BotMessageHandler implements MessageHandler {
                 bot.sendMessage("Move;" + bot.getMove());
                 break;
             case "Accepted":
-                bot.sendMessage("Chat;Smart, let's end this.");
                 break;
         }
     }
@@ -105,9 +104,11 @@ public class BotMessageHandler implements MessageHandler {
             case "Regular":
                 // passes if opponent passes
                 bot.sendMessage("Pass");
+                bot.sendMessage("Chat;I pass as well.");
                 break;
             case "End":
                 // agrees to end the game
+                bot.sendMessage("Chat;Let's end this");
                 bot.sendMessage("EndDecision;Accepted");
                 break;
         }

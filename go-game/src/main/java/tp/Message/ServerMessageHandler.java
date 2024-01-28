@@ -104,6 +104,7 @@ public class ServerMessageHandler {
             currentSession.setOnePlayerAgreedToEnd(false);
             sendToPlayer("EndDecision;Declined;Wait");
             sendToOpponent("EndDecision;Declined;Move");
+            currentSession.setCurrentStoneState(getOpponentStoneState());
         }
     }
 
@@ -196,7 +197,10 @@ public class ServerMessageHandler {
         currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(),
                 currentSession.getAndUpdateMoveCount());
         if (currentSession.getPassEndsGame() == true) {
-            sendToBothPlayers("Pass;End");
+            int playerPoints = getPlayerPoints();
+            int opponentPoints = getOpponentPoints();
+            sendToPlayer("Pass;End;" + playerPoints + ";" + opponentPoints);
+            sendToOpponent("Pass;End;" + opponentPoints + ";" + playerPoints);
             currentSession.setPassEndsGame(false);
         } else {
             currentSession.setPassEndsGame(true);
@@ -256,5 +260,12 @@ public class ServerMessageHandler {
             return currentSession.getPoints(StoneState.WHITE);
         }
         return currentSession.getPoints(StoneState.BLACK);
+    }
+
+    private StoneState getOpponentStoneState() {
+        if (currentSession.getPlayer1() == player) {
+            return StoneState.WHITE;
+        }
+        return StoneState.BLACK;
     }
 }

@@ -146,4 +146,8 @@ public class Session {
             return "Pass";
         }
     }
+
+    public void setCurrentStoneState(StoneState state) {
+        moveAnalyzer.setCurrentStoneState(state);
+    }
 }

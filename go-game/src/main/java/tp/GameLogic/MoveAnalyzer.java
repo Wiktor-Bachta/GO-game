@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.bytebuddy.description.annotation.AnnotationList.Empty;
 import tp.Game.StoneState;
 import tp.Message.Message;
 import tp.Server.Session;
@@ -200,11 +201,60 @@ public class MoveAnalyzer {
     }
 
     public int calculatePoints(StoneState state) {
-        // TO DO: IMPLEMENT
-        return 0;
+        int result = getPoints(getEmptyGroups(), state);
+        for (Stone stone : getEmptyStones()) {
+            stone.reset();
+        }
+        return result;
     }
 
     public void skipTurn() {
         currentStoneState = getOppositeStoneState(currentStoneState);
+    }
+
+    private List<Group> getEmptyGroups() {
+        HashSet<Group> emptyGroups = new HashSet<>();
+        for (Stone stone : getEmptyStones()) {
+            stone.setGroup(new Group(StoneState.EMPTY, stone));
+            for (Stone neighbour : getEmptyStoneNeighbours(stone)) {
+                stone.getGroup().mergeWith(neighbour.getGroup());
+            }
+        }
+        for (Stone stone : getEmptyStones()) {
+            emptyGroups.add(stone.getGroup());
+        }
+        return new ArrayList<Group>(emptyGroups);
+    }
+
+    private int getPoints(List<Group> emptyGroups, StoneState state) {
+        int result = 0;
+        for (Group emptyGroup : emptyGroups) {
+            result += emptyGroup.getStones().size();
+            outerloop: for (Stone stone : emptyGroup.getStones()) {
+                for (Stone neighbour : getStoneNeighbours(stone)) {
+                    if (neighbour.getState() == getOppositeStoneState(state)) {
+                        result -= emptyGroup.getStones().size();
+                        break outerloop;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private List<Stone> getEmptyStones() {
+        ArrayList<Stone> result = new ArrayList<Stone>();
+        for (Stone[] stoneRow : board) {
+            for (Stone stone : stoneRow) {
+                if (stone.getState() == StoneState.EMPTY) {
+                    result.add(stone);
+                }
+            }
+        }
+        return result;
+    }
+
+    public void setCurrentStoneState(StoneState state) {
+        currentStoneState = state;
     }
 }
