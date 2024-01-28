@@ -1,5 +1,6 @@
 package tp.Server;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import tp.Game.StoneState;
@@ -24,14 +25,17 @@ public class BotIntelligence {
     // important not to be deterministic 
     // in case move is invalid
     public String getMove() {
+        ArrayList<Stone> emptySquares = new ArrayList<>();
+        for (Stone[] stoneRow : board) {
+            for (Stone stone : stoneRow) {
+                if (stone.getState() == StoneState.EMPTY) {
+                    emptySquares.add(stone);
+                }
+            }
+        }
         Random random = new Random();
-        int x;
-        int y;
-        do {
-            x = random.nextInt(size);
-            y = random.nextInt(size);
-        } while (board[x][y].getState() != StoneState.EMPTY);
-        return x + ";" + y;
+        Stone chosenStone = emptySquares.get(random.nextInt(emptySquares.size()));
+        return chosenStone.getX() + ";" + chosenStone.getY();
     }
 
     public void placeOpponentMove(int x, int y) {

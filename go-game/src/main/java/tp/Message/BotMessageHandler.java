@@ -3,7 +3,6 @@ package tp.Message;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import tp.Client.ClientState;
 import tp.Server.Bot;
 
 public class BotMessageHandler implements MessageHandler {
@@ -43,11 +42,20 @@ public class BotMessageHandler implements MessageHandler {
             case "EndGame":
                 handleEndGame();
                 break;
+            case "Chat":
+                handleChat(msgArray[1]);
+                break;
             default:
                 System.out.println("Unknown message type: " + msg);
                 break;
         }
 
+    }
+
+    private void handleChat(String sender) {
+        if ("Opponent".equals(sender)) {
+            bot.sendMessage("Chat;Don't distract me. I am thinking.");
+        }
     }
 
     private void handleMove(String[] msgArray) {
@@ -66,6 +74,7 @@ public class BotMessageHandler implements MessageHandler {
             case "Invalid":
                 if (invalidInARow > 5) {
                     bot.sendMessage("Surrender");
+                    bot.sendMessage("Chat;I give up.");
                 } else {
                     bot.sendMessage("Move;" + bot.getMove());
                     invalidInARow++;
@@ -81,6 +90,7 @@ public class BotMessageHandler implements MessageHandler {
                 bot.sendMessage("Move;" + bot.getMove());
                 break;
             case "Accepted":
+                bot.sendMessage("Chat;Smart, let's end this.");
                 break;
         }
     }

@@ -18,9 +18,12 @@ public class ChatBox extends VBox {
     public ChatBox(Client client) {
         this.client = client;
         chat = new Label();
+        setMaxWidth(220);
+        chat.setWrapText(true);
         chatButton = new Button("Send message");
         messageField = new TextField();
         ScrollPane chatScrollPane = new ScrollPane(chat);
+        chatScrollPane.setFitToWidth(true);
         chatScrollPane.setPrefHeight(300);
         getChildren().addAll(chatScrollPane, messageField, chatButton);
 
