@@ -61,7 +61,4 @@ public class ClientHandler implements Runnable {
         return clientConnection;
     }
 
-    public ClientConnection getServerConnection() {
-        return clientConnection;
-    }
 }

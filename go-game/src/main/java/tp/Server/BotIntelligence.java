@@ -46,4 +46,8 @@ public class BotIntelligence {
         board[x][y].setState(StoneState.WHITE);
     }
 
+    public Stone[][] getBoard() {
+        return board;
+    }
+
 }

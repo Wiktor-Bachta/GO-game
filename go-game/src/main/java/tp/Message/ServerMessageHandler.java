@@ -82,7 +82,7 @@ public class ServerMessageHandler {
         player.stopGame();
     }
 
-    private void handleEndDecision(String decision) {
+    public void handleEndDecision(String decision) {
         if ("Accepted".equals(decision)) {
             if (currentSession.getOnePlayerAgreedToEnd() == true) {
                 int playerPoints = getPlayerPoints();
@@ -107,7 +107,7 @@ public class ServerMessageHandler {
         }
     }
 
-    private void handleLaunch(String[] msgArray) throws IOException {
+    public void handleLaunch(String[] msgArray) throws IOException {
         String gameType = msgArray[1];
         String opponent = msgArray[2];
         switch (gameType) {
@@ -176,7 +176,7 @@ public class ServerMessageHandler {
         }
     }
 
-    private void handleMove(String xString, String yString) {
+    public void handleMove(String xString, String yString) {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
 
@@ -191,7 +191,7 @@ public class ServerMessageHandler {
         }
     }
 
-    private void handlePass() {
+    public void handlePass() {
         currentSession.skipTurn();
         currentSession.getDatabaseFacade().addMoveToDatabase(currentSession.getID(),
                 currentSession.getAndUpdateMoveCount());
@@ -204,19 +204,19 @@ public class ServerMessageHandler {
         }
     }
 
-    private void handleChat(String message) throws IOException {
+    public void handleChat(String message) throws IOException {
         sendToPlayer("Chat;Player;" + message);
         sendToOpponent("Chat;Opponent;" + message);
     }
 
-    private void handleSurrender() {
+    public void handleSurrender() {
         int playerPoints = getPlayerPoints();
         int opponentPoints = getOpponentPoints();
         sendToPlayer("EndGame;SL;" + playerPoints + ";" + opponentPoints);
         sendToOpponent("EndGame;SW;" + opponentPoints + ";" + playerPoints);
     }
 
-    private void sendToPlayer(String message) {
+    public void sendToPlayer(String message) {
         try {
             player.getClientConnection().sendMessage(new Message(message));
         } catch (IOException e) {
@@ -256,5 +256,12 @@ public class ServerMessageHandler {
             return currentSession.getPoints(StoneState.WHITE);
         }
         return currentSession.getPoints(StoneState.BLACK);
+    }
+
+    public void setCurrentSession(Session session) {
+        this.currentSession = session;
+    }
+
+    public void handleError(Object any) {
     }
 }

@@ -25,7 +25,7 @@ public class ChatBox extends VBox {
         getChildren().addAll(chatScrollPane, messageField, chatButton);
 
         chatButton.setOnAction(e -> {
-            if (!messageField.getText().isBlank()) {
+            if (!messageField.getText().trim().isBlank()) {
                 client.sendMessage("Chat;" + messageField.getText());
                 messageField.clear();
             }
