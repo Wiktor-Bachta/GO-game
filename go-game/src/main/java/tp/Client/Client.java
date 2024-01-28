@@ -83,4 +83,7 @@ public class Client {
     public void sendMessage(String message) {
         serverConnection.sendMessage(new Message(message));
     }
+
+    public void displayMessage(String s) {
+    }
 }

@@ -258,10 +258,18 @@ public class ServerMessageHandler {
         return currentSession.getPoints(StoneState.BLACK);
     }
 
+    public Session getCurrentSession() {
+        return currentSession;
+    }
+
+    public void handleError(Object any) {
+    }
+
     public void setCurrentSession(Session session) {
         this.currentSession = session;
     }
 
-    public void handleError(Object any) {
+    public ClientHandler getClientHandler() {
+        return player;
     }
 }

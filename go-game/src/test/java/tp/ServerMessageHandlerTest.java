@@ -129,4 +129,30 @@ message = new Message("EndDecision;1;1");
         // Verify that handleLaunch was called
             verify(spyServerMessageHandler, times(1)).handleEndDecision(any());
     }
+
+    @Test
+    public void testHandleMove() throws IOException {
+        String[] msgArray = {"Move", "Confirmed", "1", "1"};
+        Session session = mock(Session.class);
+        when(session.analyzeMove(1, 1)).thenReturn(true);
+        sessions.add(session);
+        serverMessageHandler.setCurrentSession(mock(Session.class));
+
+        serverMessageHandler.handleMove(msgArray[2], msgArray[3]);
+
+        verify(serverMessageHandler.getCurrentSession(), times(1)).analyzeMove(1, 1);
+    }
+
+    @Test
+    public void testHandleEndDecision()
+    {
+        String decision = "Accepted";
+
+        Session session = mock(Session.class);
+        sessions.add(session);
+        serverMessageHandler.setCurrentSession(mock(Session.class));
+        serverMessageHandler.handleEndDecision(decision);
+        verify(serverMessageHandler.getCurrentSession(), times(1)).setOnePlayerAgreedToEnd(true);
+
+    }
 }
