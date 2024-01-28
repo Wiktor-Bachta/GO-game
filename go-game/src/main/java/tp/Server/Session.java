@@ -147,4 +147,11 @@ public class Session {
         }
     }
 
+    public void setDatabaseFacade(DatabaseFacade databaseFacade) {
+        this.databaseFacade = databaseFacade;
+    }
+
+    public void setMoveAnalyzer(MoveAnalyzer moveAnalyzer) {
+        this.moveAnalyzer = moveAnalyzer;
+    }
 }

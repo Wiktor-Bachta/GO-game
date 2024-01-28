@@ -50,6 +50,13 @@ GameHistory {
         this.moveType = moveType;
     }
 
+    public GameHistory(int i, MoveType moveType, int i1, int i2) {
+        this.moveNumber = i;
+        this.moveType = moveType;
+        this.x = i1;
+        this.y = i2;
+    }
+
     // Getters and setters for other fields
 
     public String getGameID() {
