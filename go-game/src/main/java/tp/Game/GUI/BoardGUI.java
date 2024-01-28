@@ -77,4 +77,8 @@ public class BoardGUI extends Pane {
     private int getSqarePixelSize(int size) {
         return 760 / size;
     }
+
+    public Client getClient() {
+        return client;
+    }
 }
