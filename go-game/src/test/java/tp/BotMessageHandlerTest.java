@@ -2,9 +2,10 @@ package tp;
 
 import org.junit.Before;
 import org.junit.Test;
-import tp.Message.BotMessageHandler;
-import tp.Message.Message;
-import tp.Server.Bot;
+
+import tp.message.BotMessageHandler;
+import tp.message.Message;
+import tp.server.Bot;
 
 import java.io.IOException;
 

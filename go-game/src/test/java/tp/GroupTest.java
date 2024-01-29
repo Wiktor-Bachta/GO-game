@@ -2,9 +2,10 @@ package tp;
 
 import org.junit.Before;
 import org.junit.Test;
-import tp.Game.StoneState;
-import tp.GameLogic.Group;
-import tp.GameLogic.Stone;
+
+import tp.gamelogic.Group;
+import tp.gamelogic.Stone;
+import tp.gamelogic.StoneState;
 
 import java.util.Set;
 

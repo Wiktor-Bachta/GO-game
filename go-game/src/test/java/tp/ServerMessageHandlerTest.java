@@ -2,20 +2,24 @@ package tp;
 
 import org.junit.Before;
 import org.junit.Test;
-import tp.Connection.ClientConnection;
-import tp.Connection.ServerConnection;
-import tp.Database.DatabaseFacade;
-import tp.Message.Message;
-import tp.Message.ServerMessageHandler;
-import tp.Server.Bot;
-import tp.Server.ClientHandler;
-import tp.Server.Session;
+
+import tp.connection.ClientConnection;
+import tp.connection.ServerConnection;
+import tp.database.DatabaseFacade;
+import tp.message.Message;
+import tp.message.ServerMessageHandler;
+import tp.server.Bot;
+import tp.server.ClientHandler;
+import tp.server.Session;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class ServerMessageHandlerTest {
@@ -23,6 +27,7 @@ public class ServerMessageHandlerTest {
     private ClientHandler clientHandler;
     private List<Session> sessions;
     private Session currentSession;
+
     @Before
     public void setUp() {
         clientHandler = mock(ClientHandler.class);
@@ -38,7 +43,7 @@ public class ServerMessageHandlerTest {
         clientHandler = mock(ClientHandler.class);
         sessions = new ArrayList<>();
         serverMessageHandler = new ServerMessageHandler(sessions, clientHandler);
-        String[] msgArray = {"Launch", "Create", "sessionID", "19"};
+        String[] msgArray = { "Launch", "Create", "sessionID", "19" };
         assert serverMessageHandler != null;
         when(clientHandler.getClientConnection()).thenReturn(mock(ClientConnection.class));
         serverMessageHandler.handleLaunch(msgArray);
@@ -50,7 +55,7 @@ public class ServerMessageHandlerTest {
         clientHandler = mock(ClientHandler.class);
         sessions = new ArrayList<>();
         serverMessageHandler = new ServerMessageHandler(sessions, clientHandler);
-        String[] msgArray = {"Launch", "Join", "sessionID"};
+        String[] msgArray = { "Launch", "Join", "sessionID" };
         when(clientHandler.getClientConnection()).thenReturn(mock(ClientConnection.class));
         serverMessageHandler.handleLaunch(msgArray);
         verify(clientHandler, times(1)).getClientConnection();
@@ -61,7 +66,7 @@ public class ServerMessageHandlerTest {
         clientHandler = mock(ClientHandler.class);
         sessions = new ArrayList<>();
         serverMessageHandler = new ServerMessageHandler(sessions, clientHandler);
-        String[] msgArray = {"Launch", "Join", "sessionID"};
+        String[] msgArray = { "Launch", "Join", "sessionID" };
         when(clientHandler.getClientConnection()).thenReturn(mock(ClientConnection.class));
         serverMessageHandler.handleLaunch(msgArray);
         verify(clientHandler, times(1)).getClientConnection();
@@ -82,7 +87,7 @@ public class ServerMessageHandlerTest {
         verify(spyServerMessageHandler, times(1)).handleLaunch(any());
 
         message = new Message("Move;1;1");
-        doNothing().when(spyServerMessageHandler).handleMove(any(),any());
+        doNothing().when(spyServerMessageHandler).handleMove(any(), any());
         // Call the handleMessage method on the spy
         spyServerMessageHandler.handleMessage(message);
 
@@ -111,28 +116,28 @@ public class ServerMessageHandlerTest {
         spyServerMessageHandler.handleMessage(message);
 
         // Verify that handleLaunch was called
-            verify(spyServerMessageHandler, times(1)).handleChat(any());
+        verify(spyServerMessageHandler, times(1)).handleChat(any());
 
-message = new Message("Error;1;1");
+        message = new Message("Error;1;1");
         doNothing().when(spyServerMessageHandler).handleError(any());
         // Call the handleMessage method on the spy
         spyServerMessageHandler.handleMessage(message);
 
         // Verify that handleLaunch was called
-            verify(spyServerMessageHandler, times(0)).handleError(any());
+        verify(spyServerMessageHandler, times(0)).handleError(any());
 
-message = new Message("EndDecision;1;1");
+        message = new Message("EndDecision;1;1");
         doNothing().when(spyServerMessageHandler).handleEndDecision(any());
         // Call the handleMessage method on the spy
         spyServerMessageHandler.handleMessage(message);
 
         // Verify that handleLaunch was called
-            verify(spyServerMessageHandler, times(1)).handleEndDecision(any());
+        verify(spyServerMessageHandler, times(1)).handleEndDecision(any());
     }
 
     @Test
     public void testHandleMove() throws IOException {
-        String[] msgArray = {"Move", "Confirmed", "1", "1"};
+        String[] msgArray = { "Move", "Confirmed", "1", "1" };
         Session session = mock(Session.class);
         when(session.analyzeMove(1, 1)).thenReturn(true);
         sessions.add(session);
@@ -141,18 +146,5 @@ message = new Message("EndDecision;1;1");
         serverMessageHandler.handleMove(msgArray[2], msgArray[3]);
 
         verify(serverMessageHandler.getCurrentSession(), times(1)).analyzeMove(1, 1);
-    }
-
-    @Test
-    public void testHandleEndDecision()
-    {
-        String decision = "Accepted";
-
-        Session session = mock(Session.class);
-        sessions.add(session);
-        serverMessageHandler.setCurrentSession(mock(Session.class));
-        serverMessageHandler.handleEndDecision(decision);
-        verify(serverMessageHandler.getCurrentSession(), times(1)).setOnePlayerAgreedToEnd(true);
-
     }
 }

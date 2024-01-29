@@ -1,7 +1,8 @@
 package tp;
 
 import org.junit.Test;
-import tp.Message.Message;
+
+import tp.message.Message;
 
 public class MessageTest {
     @Test

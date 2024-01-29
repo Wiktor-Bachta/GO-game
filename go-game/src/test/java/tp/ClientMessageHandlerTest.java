@@ -2,12 +2,13 @@ package tp;
 
 import org.junit.Before;
 import org.junit.Test;
-import tp.Client.ClientState;
-import tp.Client.GUI.ClientGUI;
-import tp.Client.GUI.SidePanelGUI;
-import tp.Message.ClientMessageHandler;
-import tp.Message.Message;
-import tp.Client.Client;
+
+import tp.client.Client;
+import tp.client.ClientState;
+import tp.client.GUI.ClientGUI;
+import tp.client.GUI.SidePanelGUI;
+import tp.message.ClientMessageHandler;
+import tp.message.Message;
 
 import java.io.IOException;
 

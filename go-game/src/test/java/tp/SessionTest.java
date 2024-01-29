@@ -2,13 +2,14 @@ package tp;
 
 import org.junit.Before;
 import org.junit.Test;
-import tp.Database.DatabaseFacade;
-import tp.Database.dto.GameHistory;
-import tp.Database.dto.MoveType;
-import tp.Game.StoneState;
-import tp.GameLogic.MoveAnalyzer;
-import tp.Server.ClientHandler;
-import tp.Server.Session;
+
+import tp.database.DatabaseFacade;
+import tp.database.dto.GameHistory;
+import tp.database.dto.MoveType;
+import tp.gamelogic.MoveAnalyzer;
+import tp.gamelogic.StoneState;
+import tp.server.ClientHandler;
+import tp.server.Session;
 
 import java.util.Arrays;
 import java.util.List;

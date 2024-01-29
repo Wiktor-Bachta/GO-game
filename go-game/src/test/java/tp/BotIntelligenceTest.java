@@ -2,8 +2,9 @@ package tp;
 
 import org.junit.Before;
 import org.junit.Test;
-import tp.Game.StoneState;
-import tp.Server.BotIntelligence;
+
+import tp.gamelogic.StoneState;
+import tp.server.BotIntelligence;
 
 import static org.junit.Assert.*;
 

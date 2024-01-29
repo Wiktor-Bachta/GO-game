@@ -1,8 +1,9 @@
 package tp;
 
 import javafx.scene.paint.Color;
+import tp.gamelogic.StoneState;
+
 import org.junit.Test;
-import tp.Game.StoneState;
 
 import static org.junit.Assert.assertEquals;
 

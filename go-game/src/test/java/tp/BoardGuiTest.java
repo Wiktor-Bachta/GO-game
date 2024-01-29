@@ -2,10 +2,11 @@ package tp;
 
 import org.junit.Before;
 import org.junit.Test;
-import tp.Client.Client;
-import tp.Client.ClientState;
-import tp.Client.GUI.ClientGUI;
-import tp.Game.GUI.BoardGUI;
+
+import tp.client.Client;
+import tp.client.ClientState;
+import tp.client.GUI.ClientGUI;
+import tp.client.GUI.Board.BoardGUI;
 
 import static org.mockito.Mockito.*;
 

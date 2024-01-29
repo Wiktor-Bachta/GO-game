@@ -1,7 +1,8 @@
 package tp;
 
 import org.junit.Test;
-import tp.Server.Server;
+
+import tp.server.Server;
 
 public class ServerTest {
     @Test

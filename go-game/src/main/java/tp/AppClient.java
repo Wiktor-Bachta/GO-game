@@ -1,8 +1,8 @@
 package tp;
 
-import tp.Client.GUI.ClientGUI;
-
 import java.io.IOException;
+
+import tp.client.GUI.ClientGUI;
 
 /**
  * App Client runs the client

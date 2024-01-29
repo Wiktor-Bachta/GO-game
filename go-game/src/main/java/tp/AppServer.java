@@ -1,6 +1,6 @@
 package tp;
 
-import tp.Server.Server;
+import tp.server.Server;
 
 /**
  * App Server runs the server
