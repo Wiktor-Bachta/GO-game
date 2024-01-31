@@ -6,6 +6,7 @@ import tp.database.dto.MoveType;
 import tp.gamelogic.MoveAnalyzer;
 import tp.gamelogic.StoneState;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -120,7 +121,7 @@ public class Session {
         return databaseFacade;
     }
 
-    public void loadGameHistory() {
+    public void loadGameHistory() throws IOException {
         if (gameHistory != null) {
             return;
         }

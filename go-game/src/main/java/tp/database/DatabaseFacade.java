@@ -1,12 +1,13 @@
 package tp.database;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -47,10 +48,23 @@ public class DatabaseFacade {
         em.close();
     }
 
-    public void open() {
+    public void open() throws IOException {
         Map<String, String> env = new HashMap<>();
-        env.put("javax.persistence.jdbc.user", System.getenv("GoGameHistoryDataBaseUser"));
-        env.put("javax.persistence.jdbc.password", System.getenv("GoGameHistoryDataBasePasswor"));
+        // Zmiana wprowadzona na potrzebę oddania pracy
+        BufferedReader reader = new BufferedReader(new FileReader("src/main/java/tp/database/login.txt"));
+
+        String user = reader.readLine();
+        String password = reader.readLine();
+
+        reader.close();
+
+        System.out.println(user);
+        System.out.println(password);
+
+        env.put("javax.persistence.jdbc.user", user);
+        env.put("javax.persistence.jdbc.password", password);
+        //env.put("javax.persistence.jdbc.user", System.getenv("GoGameHistoryDataBaseUser"));
+        //env.put("javax.persistence.jdbc.password", System.getenv("GoGameHistoryDataBasePasswor"));
         emf = Persistence.createEntityManagerFactory("default", env);
     }
 
@@ -58,7 +72,7 @@ public class DatabaseFacade {
         emf.close();
     }
 
-    public List<GameHistory> getGameHistory(String sessionID) {
+    public List<GameHistory> getGameHistory(String sessionID) throws IOException {
         open();
         List<GameHistory> gameHistoryList = new ArrayList<>();
         EntityManager em = emf.createEntityManager();

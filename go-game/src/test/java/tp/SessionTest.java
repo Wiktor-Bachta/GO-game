@@ -11,6 +11,7 @@ import tp.gamelogic.StoneState;
 import tp.server.ClientHandler;
 import tp.server.Session;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,8 +71,7 @@ public class SessionTest {
     }
 
     @Test
-    public void testGetMoves()
-    {
+    public void testGetMoves() throws IOException {
         List<GameHistory> gameHistory = Arrays.asList(
                 new GameHistory(1, MoveType.Move, 0, 0),
                 new GameHistory(1, MoveType.Remove, 1, 1),

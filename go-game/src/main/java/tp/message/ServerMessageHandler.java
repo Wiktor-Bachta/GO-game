@@ -65,7 +65,7 @@ public class ServerMessageHandler {
         }
     }
 
-    private void handleReplay(String moveNumber) {
+    private void handleReplay(String moveNumber) throws IOException {
         int number = Integer.parseInt(moveNumber);
         if (number == 1) {
             currentSession.loadGameHistory();
