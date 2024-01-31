@@ -19,6 +19,8 @@ public class MoveAnalyzer {
     private Stone[][] board;
     private int size;
     private StoneState currentStoneState;
+    private int blackPoints = 0;
+    private int whitePoints = 0;
     private int killedLastMove = 0;
     private Stone stoneKilledLastMove;
     private boolean passEndsGame = false;
@@ -167,6 +169,7 @@ public class MoveAnalyzer {
     public void killGroup(Group group) {
         List<Stone> stonesCopy = new ArrayList<>(group.getStones());
         for (Stone stone : stonesCopy) {
+            addPoint(currentStoneState);
             stone.reset();
             stoneKilledLastMove = stone;
             try {
@@ -205,6 +208,12 @@ public class MoveAnalyzer {
         }
         for (Stone stone : getEmptyStones()) {
             stone.reset();
+        }
+        if (state == StoneState.BLACK) {
+            result += blackPoints;
+        }
+        else {
+            result += whitePoints;
         }
         return result;
     }
@@ -252,5 +261,14 @@ public class MoveAnalyzer {
 
     public void setCurrentStoneState(StoneState state) {
         currentStoneState = state;
+    }
+
+    public void addPoint(StoneState state) {
+        if (state == StoneState.BLACK) {
+            blackPoints++;
+        }
+        else {
+            whitePoints++;
+        }
     }
 }
